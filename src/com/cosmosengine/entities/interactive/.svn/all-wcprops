@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/cosmosengine_ce/!svn/ver/116/Astroid/src/com/cosmosengine/entities/interactive
+END
+TerminalEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/cosmosengine_ce/!svn/ver/116/Astroid/src/com/cosmosengine/entities/interactive/TerminalEntity.java
+END
+JumperEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/cosmosengine_ce/!svn/ver/115/Astroid/src/com/cosmosengine/entities/interactive/JumperEntity.java
+END
+EventTriggerZoneEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/cosmosengine_ce/!svn/ver/98/Astroid/src/com/cosmosengine/entities/interactive/EventTriggerZoneEntity.java
+END
+HealthUpEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/cosmosengine_ce/!svn/ver/115/Astroid/src/com/cosmosengine/entities/interactive/HealthUpEntity.java
+END
+DrillUpEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/cosmosengine_ce/!svn/ver/115/Astroid/src/com/cosmosengine/entities/interactive/DrillUpEntity.java
+END
+DroppedItemEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/cosmosengine_ce/!svn/ver/98/Astroid/src/com/cosmosengine/entities/interactive/DroppedItemEntity.java
+END
+ButtonEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/cosmosengine_ce/!svn/ver/100/Astroid/src/com/cosmosengine/entities/interactive/ButtonEntity.java
+END
