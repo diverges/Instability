@@ -168,36 +168,37 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
      * movement permission granted to entities.
      */
     private void update() {
-        if (!isPaused && !noClip)
+        if (!noClip)
             collision();
-        if (!isPaused)
-            sideScroll();
+
+        sideScroll();
 
         /*
          * Call the update , act(), method from each individual object if game
          * is not paused
          */
         if (!isPaused) {
-            for (CosmosEntity obj : level.getLevelEnemyObjects())
-                if (obj.isAlive())
-                    obj.act(); // act if object is alive
-
-            for (CosmosEntity obj : level.getLevelInteractiveObjects())
-                if (obj.isAlive())
+            for (CosmosEntity obj : level.getLevelEnemyObjects()) {
+                if (obj.isAlive()) {
                     obj.act();
-
-            for (CosmosEntity obj : level.getLevelTextureObjects())
+                }
+            }
+            for (CosmosEntity obj : level.getLevelInteractiveObjects()) {
+                if (obj.isAlive()) {
+                    obj.act();
+                }
+            }
+            for (CosmosEntity obj : level.getLevelTextureObjects()) {
                 obj.act();
+            }
 
-        }
-
-        for (CosmosEntity anim : level.getlevelConstantObjects())
-            if (anim.isAlive())
-                anim.act();
-
-        if (!isPaused)
             player.act(); // calls player act method, results in animation
-
+        }
+        for (CosmosEntity anim : level.getlevelConstantObjects()) {
+            if (anim.isAlive()) {
+                anim.act();
+            }
+        }
     }
 
     /**
@@ -453,10 +454,16 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
 
     public void pause() {
         this.isPaused = true;
+        if (player != null) {
+            player.setCanMove(false);
+        }
     }
 
     public void unpause() {
         this.isPaused = false;
+        if (player != null) {
+            player.setCanMove(true);
+        }
     }
 
     public boolean isPaused() {

@@ -124,23 +124,23 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
     }
 
     public boolean isMoving() {
-        return moving;
+        return moving && canMove;
     }
 
     public boolean isMovingRight() {
-        return isMovingRight;
+        return isMovingRight && canMove;
     }
 
     public boolean isMovingLeft() {
-        return isMovingLeft;
+        return isMovingLeft && canMove;
     }
 
     public boolean isMovingUp() {
-        return isMovingUp;
+        return isMovingUp && canMove;
     }
 
     public boolean isMovingDown() {
-        return isMovingDown;
+        return isMovingDown && canMove;
     }
 
     public boolean isCanMove() {
@@ -254,6 +254,11 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
         g.setColor(Color.GREEN);
         CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Saw Power: " + this.damagePower, 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
 
+        if (enteredCheatMode) {
+            // entered cheat mode
+            g.setColor(Color.GREEN);
+            CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "ENTER CHEAT: " + cheat, 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
+        }
         if (dealtDamage != -1) {
             drawStep++;
             // display damage dealt to player
@@ -306,109 +311,135 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
     @Override
     public void keyPressed(KeyEvent e) {
         if (canMove) {
-            if (e.getKeyChar() == 'w' || e.getKeyCode() == KeyEvent.VK_UP) {
-                isMovingUp = true;
-                moving = true;
-            }
-            if (e.getKeyChar() == 'd' || e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                isMovingRight = true;
-                moving = true;
-            }
-            if (e.getKeyChar() == 's' || e.getKeyCode() == KeyEvent.VK_DOWN) {
-                isMovingDown = true;
-                moving = true;
-            }
-            if (e.getKeyChar() == 'a' || e.getKeyCode() == KeyEvent.VK_LEFT) {
-                isMovingLeft = true;
-                moving = true;
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_UP:
+                case KeyEvent.VK_W:
+                    isMovingUp = true;
+                    moving = true;
+                    break;
+                case KeyEvent.VK_RIGHT:
+                case KeyEvent.VK_D:
+                    isMovingRight = true;
+                    moving = true;
+                    break;
+                case KeyEvent.VK_DOWN:
+                case KeyEvent.VK_S:
+                    isMovingDown = true;
+                    moving = true;
+                    break;
+                case KeyEvent.VK_LEFT:
+                case KeyEvent.VK_A:
+                    isMovingLeft = true;
+                    moving = true;
+                    break;
             }
             me.setBounds(me.x, me.y, me.width, me.height);
         }
-
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         if (enteredCheatMode) {
-            cheat += e.getKeyChar();
-            switch (cheat) {
-                case CosmosConstants.LEVEL_SCREEN:
-                    game.menu = new MenuLevelSelect(game);
-                    game.unpause();
-                    enteredCheatMode = false;
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_BACK_SPACE:
+                    cheat = cheat.substring(0, cheat.length() - 1);
                     break;
-                case CosmosConstants.GOD_MODE:
-                    armor = MAXARMOR * 500;
-                    damagePower = 100;
-                    game.unpause();
+                case KeyEvent.VK_PAUSE:
                     enteredCheatMode = false;
+                    game.unpause();
                     break;
-                case CosmosConstants.NO_CLIP:
-                    game.noClip = !game.noClip;
-                    game.unpause();
-                    enteredCheatMode = false;
+                case KeyEvent.VK_ENTER:
+                    boolean validCheat = false;
+                    switch (cheat) {
+                        case CosmosConstants.LEVEL_SCREEN:
+                            game.menu = new MenuLevelSelect(game);
+                            validCheat = true;
+                            break;
+                        case CosmosConstants.GOD_MODE:
+                            armor = MAXARMOR * 500;
+                            damagePower = 100;
+                            validCheat = true;
+                            break;
+                        case CosmosConstants.NO_CLIP:
+                            game.noClip = !game.noClip;
+                            validCheat = true;
+                            break;
+                    }
+                    if (validCheat) {
+                        System.out.println("Cheat entered: " + cheat);
+                        enteredCheatMode = false;
+                        game.unpause();
+                    }
+                    cheat = "";
+                    break;
+                default:
+                    cheat += e.getKeyChar();
                     break;
             }
-            if (!enteredCheatMode)
-                System.out.println("Cheat entered: " + cheat);
-        }
-        if (e.getKeyCode() == KeyEvent.VK_PAUSE) {
-            if (enteredCheatMode) {
-                enteredCheatMode = false;
-                game.unpause();
-            } else {
-                enteredCheatMode = true;
-                game.pause();
-            }
-            cheat = "";
-        }
-        if (enteredCheatMode && e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-            cheat = "";
-        }
-        if (e.getKeyChar() == 'w' || e.getKeyCode() == KeyEvent.VK_UP) {
-            isMovingUp = false;
-        }
-        if (e.getKeyChar() == 'd' || e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            isMovingRight = false;
-        }
-        if (e.getKeyChar() == 's' || e.getKeyCode() == KeyEvent.VK_DOWN) {
-            isMovingDown = false;
-        }
-        if (e.getKeyChar() == 'a' || e.getKeyCode() == KeyEvent.VK_LEFT) {
-            isMovingLeft = false;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            if (game.isPaused())
-                game.unpause();
-            else
-                game.pause();
-        } else if (e.getKeyChar() == 'i' && !enteredCheatMode) {
-            if (inventory.isDisplay()) {
-                inventory.hide();
-                game.unpause();
-            } else {
-                inventory.show();
-                game.pause();
-            }
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (game.level != null) {
-                if (game.level.isLoading) {
-                    game.level.isLoading = false;
-                    game.level.isOnLoadFinished = true;
-                } else {
-                    for (CosmosEntity obj : game.level.getlevelConstantObjects()) {
-                        if (obj.isAlive()) {
-                            if (obj instanceof MessagePopupEntity) {
-                                obj.setAlive(false);
-                                game.hud.setEnabled(true);
-                                game.unpause();
-                                break;
+        } else {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_UP:
+                case KeyEvent.VK_W:
+                    isMovingUp = false;
+                    break;
+                case KeyEvent.VK_RIGHT:
+                case KeyEvent.VK_D:
+                    isMovingRight = false;
+                    break;
+                case KeyEvent.VK_DOWN:
+                case KeyEvent.VK_S:
+                    isMovingDown = false;
+                    break;
+                case KeyEvent.VK_LEFT:
+                case KeyEvent.VK_A:
+                    isMovingLeft = false;
+                    break;
+                case KeyEvent.VK_PAUSE:
+                    if (game.level != null && !game.level.isLoading) {
+                        enteredCheatMode = true;
+                        game.pause();
+                        cheat = "";
+                    }
+                    break;
+                case KeyEvent.VK_ESCAPE:
+                    if (inventory.isDisplay()) {
+                        inventory.hide();
+                        game.unpause();
+                    } else if (game.isPaused()) {
+                        game.unpause();
+                    } else {
+                        game.pause();
+                    }
+                    break;
+                case KeyEvent.VK_I:
+                case KeyEvent.VK_E:
+                    if (inventory.isDisplay()) {
+                        inventory.hide();
+                        game.unpause();
+                    } else {
+                        inventory.show();
+                        game.pause();
+                    }
+                    break;
+                case KeyEvent.VK_ENTER:
+                    if (game.level != null) {
+                        if (game.level.isLoading) {
+                            game.level.isLoading = false;
+                            game.level.isOnLoadFinished = true;
+                        } else {
+                            for (CosmosEntity obj : game.level.getlevelConstantObjects()) {
+                                if (obj.isAlive()) {
+                                    if (obj instanceof MessagePopupEntity) {
+                                        obj.setAlive(false);
+                                        game.hud.setEnabled(true);
+                                        game.unpause();
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
-                }
+                    break;
             }
         }
 
