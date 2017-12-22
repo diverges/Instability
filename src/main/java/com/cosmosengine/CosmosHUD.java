@@ -29,15 +29,15 @@ public class CosmosHUD implements Clickable {
          */
 
 
-        ButtonEntity pause = new ButtonEntity(game, "Pause", "hud", "reset-button-idle.png;reset-button-clicked.png", null, 0, 0);
+        ButtonEntity reset = new ButtonEntity(game, "Reset", "hud", "reset-button-idle.png;reset-button-clicked.png", null, 0, 0);
         ButtonEntity inventory = new ButtonEntity(game, "Inventory", "hud", "inventory-button-idle.png;inventory-button-clicked.png", null, 0, 0);
-        staticEntities.add(pause);
+        staticEntities.add(reset);
         staticEntities.add(inventory);
 
-        pause.setX(CosmosConstants.WIDTH - pause.getWidth() - 20);
-        pause.setY(CosmosConstants.HEIGHT - pause.getHeight() - 20);
+        reset.setX(CosmosConstants.WIDTH - reset.getWidth() - 20);
+        reset.setY(CosmosConstants.HEIGHT - reset.getHeight() - 20);
 
-        inventory.setX(pause.getX() - inventory.getWidth() - 20);
+        inventory.setX(reset.getX() - inventory.getWidth() - 20);
         inventory.setY(CosmosConstants.HEIGHT - inventory.getHeight() - 20);
     }
 
@@ -79,18 +79,19 @@ public class CosmosHUD implements Clickable {
                 if (pressing.isInButton(event.getPoint())) {
                     String ref = (pressing).getRef();
                     switch (ref) {
-                        case "Pause":
+                        case "Reset":
                             game.player.kill();
                             break;
                         case "Inventory":
                             // when inventory button is pressed
                             if (!game.player.getInventory().isDisplay()) {
+                                // pause game and load inventory
                                 game.player.getInventory().show();
-                                game.pause();// pause game and load inventory
+                                game.pause();
                             } else {
+                                // unpause game and unload inventory
                                 game.player.getInventory().hide();
-                                game.unpause(); // unpause game and unload
-                                // inventory
+                                game.unpause();
                             }
                             if (CosmosConstants.DEBUG)
                                 System.out.println("Load Inventory");
