@@ -42,8 +42,8 @@ public class Inventory implements Clickable {
     private static final int HALF_SLOT = SLOT_SIZE / 2;
 
     private static final int INVENTORY_MARGIN = (int) (20 * SCALE);
-    private static final int INVENTORY_WIDTH = (SLOT_SIZE * COL_COUNT) + (SLOT_MARGIN * (COL_COUNT + 1)) + (INVENTORY_MARGIN * 2);
-    private static final int INVENTORY_HEIGHT = (SLOT_SIZE * (ROW_COUNT + 1)) + (SLOT_MARGIN * (ROW_COUNT + 1)) + (INVENTORY_MARGIN * 3);
+    private static final int INVENTORY_WIDTH = (SLOT_SIZE * COL_COUNT) + (SLOT_MARGIN * (COL_COUNT - 1)) + (INVENTORY_MARGIN * 2);
+    private static final int INVENTORY_HEIGHT = (SLOT_SIZE * (ROW_COUNT + 1)) + (SLOT_MARGIN * (ROW_COUNT - 1)) + (INVENTORY_MARGIN * 3);
 
     public Inventory(GameCanvas game) {
         this.game = game;
@@ -81,7 +81,7 @@ public class Inventory implements Clickable {
 
         g.fillRect(topX, topY, INVENTORY_WIDTH, INVENTORY_HEIGHT);
 
-        int cS1X = topX + ((INVENTORY_WIDTH / 2) - (spaceForThreeSlots / 2));
+        int cS1X = topX + INVENTORY_WIDTH - spaceForThreeSlots - INVENTORY_MARGIN;
         int cS2X = cS1X + SLOT_SIZE + (textMargin * 2) + plusBounds.width;
         int pSX = cS2X + SLOT_SIZE + (textMargin * 2) + equalsBounds.width;
 

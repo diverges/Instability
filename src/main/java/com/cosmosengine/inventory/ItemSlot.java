@@ -37,7 +37,7 @@ public class ItemSlot {
         g.setColor(Color.BLACK);
         g.drawRect(x, y, slotSize, slotSize);
         if (item != null) {
-            item.draw(g, x + 5, y + 5);
+            item.draw(g, x, y);
             // display current quantity
             g.setColor(Color.RED);
             if (quantity != 1) {
