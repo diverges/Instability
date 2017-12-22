@@ -104,8 +104,16 @@ public class WallEntity extends CosmosEntity {
     public boolean isCollided() {
         if (!isAlive || dying)
             return false;
-        Rectangle collide = new Rectangle(me.x - 4, me.y - 4, me.width + 4, me.height + 4);
-        return game.player.getBounds().intersects(collide);
+        boolean d = game.player.isMovingDown();
+        boolean u = game.player.isMovingUp();
+        boolean r = game.player.isMovingRight();
+        boolean l = game.player.isMovingLeft();
+        Rectangle pBounds = game.player.getBounds();
+        Rectangle rightColl = new Rectangle(me.x - 4, me.y, me.width, me.height);
+        Rectangle leftColl = new Rectangle(me.x, me.y, me.width + 4, me.height);
+        Rectangle downColl = new Rectangle(me.x, me.y - 4, me.width, me.height);
+        Rectangle upColl = new Rectangle(me.x, me.y, me.width, me.height + 4);
+        return (d && downColl.intersects(pBounds)) || (u && upColl.intersects(pBounds)) || (r && rightColl.intersects(pBounds)) || (l && leftColl.intersects(pBounds));
     }
 
     private boolean checkRight() {
