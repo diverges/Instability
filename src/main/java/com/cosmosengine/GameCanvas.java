@@ -9,7 +9,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -205,33 +205,36 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
      * Detect collision
      */
     private void collision() {
-        // Checks for collision objects in a 100 pixel radius.
-        Point playerPoint = player.getPoint();
+        player.collision();
+        // Checks for collision objects in a radius.
+        Rectangle bounds = player.collisionRectangle;
         for (CosmosEntity obj : level.levelTextureObjects) {
-            if (playerPoint.distance(new Point((int) obj.getX(), (int) obj.getY())) < 100) {
+            if (bounds.intersects(obj.getBounds())) {
                 obj.collision();
             }
         }
 
         for (CosmosEntity obj : level.levelEnemyObjects) {
-            if (playerPoint.distance(obj.getPoint()) < 100) {
+            if (bounds.intersects(obj.getBounds())) {
                 obj.collision();
             }
         }
 
         for (CosmosEntity obj : level.levelInteractiveObjects) {
-            if (playerPoint.distance(new Point(obj.getPoint())) < 100) {
+            if (bounds.intersects(obj.getBounds())) {
                 obj.collision();
             }
         }
     }
 
+
     /**
      * Side-scrolling
      */
     private void sideScroll() {
-        // left and right side-scrolling
         if (player.isMoving()) {
+
+            // left and right side-scrolling
             if (player.isMovingRight() & !player.isCollidingRight()) {
                 // move room right
                 for (CosmosEntity obj : level.getLevelTextureObjects())
@@ -268,6 +271,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
 
                 level.backgroundY -= player.dY;
             }
+
             if (player.isMovingUp() & !player.isCollidingUp()) {
                 // move entire room up
                 for (CosmosEntity obj : level.getLevelTextureObjects())

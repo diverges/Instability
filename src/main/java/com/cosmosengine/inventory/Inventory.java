@@ -75,22 +75,22 @@ public class Inventory implements Clickable {
         int marginX = topX + INVENTORY_MARGIN;
         int textMargin = 10;
 
-        Rectangle plusBounds = CosmosConstants.getStringBounds(g2, "+", topX, topY);
-        Rectangle equalsBounds = CosmosConstants.getStringBounds(g2, "=", topX, topY);
-        int spaceForThreeSlots = SLOT_SIZE * 3 + plusBounds.width + equalsBounds.width + (textMargin * 4);
+        Rectangle2D plusBounds = CosmosConstants.getStringBounds(g2, "+");
+        Rectangle2D equalsBounds = CosmosConstants.getStringBounds(g2, "=");
+        int spaceForThreeSlots = (int) (SLOT_SIZE * 3 + plusBounds.getWidth() + equalsBounds.getWidth() + (textMargin * 4));
 
         g.fillRect(topX, topY, INVENTORY_WIDTH, INVENTORY_HEIGHT);
 
         int cS1X = topX + INVENTORY_WIDTH - spaceForThreeSlots - INVENTORY_MARGIN;
-        int cS2X = cS1X + SLOT_SIZE + (textMargin * 2) + plusBounds.width;
-        int pSX = cS2X + SLOT_SIZE + (textMargin * 2) + equalsBounds.width;
+        int cS2X = (int) (cS1X + SLOT_SIZE + (textMargin * 2) + plusBounds.getWidth());
+        int pSX = (int) (cS2X + SLOT_SIZE + (textMargin * 2) + equalsBounds.getWidth());
 
         g.setColor(Color.BLACK);
         Font temp = g.getFont();
         g.setFont(new Font(temp.getFontName(), Font.BOLD, (int) (20 * SCALE)));
 
-        CosmosConstants.drawStringFromTop(g2, "+", cS1X + SLOT_SIZE + textMargin, marginY + HALF_SLOT - (plusBounds.height / 2));
-        CosmosConstants.drawStringFromTop(g2, "=", cS2X + SLOT_SIZE + textMargin, marginY + HALF_SLOT - (equalsBounds.height / 2));
+        CosmosConstants.drawStringFromTop(g2, "+", cS1X + SLOT_SIZE + textMargin, (float) (marginY + HALF_SLOT - (plusBounds.getHeight() / 2)));
+        CosmosConstants.drawStringFromTop(g2, "=", cS2X + SLOT_SIZE + textMargin, (float) (marginY + HALF_SLOT - (equalsBounds.getHeight() / 2)));
         g.setFont(temp);
 
         cS1.draw(g, cS1X, marginY, SLOT_SIZE);

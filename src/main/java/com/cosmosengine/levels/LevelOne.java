@@ -90,9 +90,9 @@ public class LevelOne extends LevelLoader {
                 + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::dddddddd::::::::::::::::::::::::\n"
                 + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
 
-        String complex = "[msg;Use the arrow keys to move;50]\n"
+        String complex = "[msg;Use the arrow keys to move;1]\n"
 				+ "[tz;120;120;startScript;0]\n" + "[dp;5]\n"
-				+ "[msg;Weakness - Hydrogen Peroxide;50]\n"
+				+ "[msg;Weakness - Hydrogen Peroxide;1]\n"
 				+ "[tz;280;120;powerUpScript;0]\n"
 				+ "[gt;hper;1;40;40;Explore the Asteroid]\n"
 				+ "[tz;120;120;hydrogenScript;0]\n"
@@ -123,7 +123,7 @@ public class LevelOne extends LevelLoader {
 				+ "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n"
 				+ "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1500;0]\n"
 				+ "[tw;1500;0]\n" + "[tw;1500;0]\n" + "[tw;1500;0]\n"
-				+ "[msg;Weakness - Hydroxide (x5);50]\n" + "[tw;1500;0]\n"
+				+ "[msg;Weakness - Hydroxide (x5);1]\n" + "[tw;1500;0]\n"
 				+ "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n"
 				+ "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n"
 				+ "[tw;1750;1]\n" + "[tw;1750;1]\n"
@@ -131,7 +131,7 @@ public class LevelOne extends LevelLoader {
 				+ "[tz;120;120;co2Script;0]\n"
 				+ "[gt;co2;6;40;40;Explore the Asteroid]\n"
 				+ "[tz;120;40;carboScript;0]\n"
-				+ "[msg;Weakness - Carbonic Acid;50]\n"
+				+ "[msg;Weakness - Carbonic Acid;1]\n"
 				+ "[gt;carbo;1;40;40;Explore the Asteroid]\n"
 				+ "[tz;240;40;finalScript;0]\n" + "[terminal;LevelTwo]\n";
         // @formatter:on
@@ -144,7 +144,7 @@ public class LevelOne extends LevelLoader {
 
         hydrogenScript = new MessagePopupEntity(game, 1, "Scanners detect the presence-n" + "of Hydrogen trapped in gas-n" + "pockets within the nearby-n" + "dirt. Hydrogen serves as an-n" + "excellent reagent, collection-n" + "is advised. ", "computer/hydrogenScript.wav");
 
-        waterScript = new MessagePopupEntity(game, 1, "The material ahead can�t be-n" + "pierced without first weakening-n" + "it. Sources confirm that-n" + "such debris may be damaged by-n" + "applying water. Since such a-n" + "compound is not natural in A-52-n" + "combine two hydrogen pieces and-n" + "an oxygen piece to create the-n" + "water needed.-n", "computer/waterScript.wav");
+        waterScript = new MessagePopupEntity(game, 1, "The material ahead can\'t be-n" + "pierced without first weakening-n" + "it. Sources confirm that-n" + "such debris may be damaged by-n" + "applying water. Since such a-n" + "compound is not natural in A-52-n" + "combine two hydrogen pieces and-n" + "an oxygen piece to create the-n" + "water needed.-n", "computer/waterScript.wav");
 
         gasScript = new MessagePopupEntity(game, 1, "Crystals contain a variety of-n" + "elements that may be processed.-n" + "The material received from-n" + "mining the crystal is heavily-n" + "dependent on the blade of-n" + "your saw.", "computer/gasScript.wav");
 
@@ -181,7 +181,7 @@ public class LevelOne extends LevelLoader {
         loadImage = ImageLoader.get().getSprite("loading_screen.png", true);
 
         //Loading screen text
-        script1 = new MessageEntity(game, null, null, null, 50, 50, -1, -1, 47, "Initializing...               -n" + "Initialization complete.    -n" + "-n" + "Beginning optimization of NEL Operating System...      -n" + "Searching files for relevant data...     -n" + "Background information accessed.-n" + "-n" + "I am NEL. Necessary Element Locator.-n" + "-n" + "I was developed in response to the commission of the BK201 mining droid to the Asteroid A-52, which was-n" + "previously colonized by a mining corporation known as [name redacted from files]. The corporation looked-n" + "for a valuable material known as Radonite in the center of the asteroid. In the year [information redacted],-n" + "instabilites within the asteroid caused the corporation to abandon its mission of acquiring the material-n" + "due to danger of loss of life and/or severe injury. The droid has been optimized to resist the Gamma-n" + "radiation emmitted by the Radonite. I am here to direct BK201 to obtain and synthesize materials needed to-n" + "reach the Radonite.         ");
+        script1 = new MessageEntity(game, null, null, null, 50, 50, 1, "Initializing...-n" + "Initialization complete.-n" + "-n" + "Beginning optimization of NEL Operating System...-n" + "Searching files for relevant data...-n" + "Background information accessed.-n" + "-n" + "I am NEL. Necessary Element Locator.-n" + "-n" + "I was developed in response to the commission of the BK201 mining droid to the Asteroid A-52, which was-n" + "previously colonized by a mining corporation known as [name redacted from files]. The corporation looked-n" + "for a valuable material known as Radonite in the center of the asteroid. In the year [information redacted],-n" + "instabilites within the asteroid caused the corporation to abandon its mission of acquiring the material-n" + "due to danger of loss of life and/or severe injury. The droid has been optimized to resist the Gamma-n" + "radiation emitted by the Radonite. I am here to direct BK201 to obtain and synthesize materials needed to-n" + "reach the Radonite.", true);
         // load level
         loadLevel(complex);
     }
@@ -252,7 +252,6 @@ public class LevelOne extends LevelLoader {
         // act out loading text
         script1.act();
         script1.draw(g);
-        isOnLoadFinished = script1.isDone();
     }
 
     @Override

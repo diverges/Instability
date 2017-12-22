@@ -6,7 +6,6 @@ import com.cosmosengine.GameCanvas;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 
 /**
  * Invisible regions used to detect when player enters a region to trigger a specific event based on level.
@@ -29,8 +28,6 @@ public class EventTriggerZoneEntity extends CosmosEntity {
         super(game, null, null, null, x, y, width, height, -1);
         this.eventID = eventID;
         this.onlyTriggerOnce = triggerOnce.equals("0");
-        this.me = new Rectangle(x, y, width, height);
-
     }
 
     @Override
@@ -55,7 +52,6 @@ public class EventTriggerZoneEntity extends CosmosEntity {
     public void collision() {
         if (isAlive) {
             // redraw rectangle
-            this.me = new Rectangle(me.x, me.y, me.width, me.height);
             if (me.contains(game.player.getPoint())) {
                 this.isEventTriggered = true;
             }
@@ -64,7 +60,6 @@ public class EventTriggerZoneEntity extends CosmosEntity {
         if (!isAlive && !me.contains(game.player.getPoint()) && !onlyTriggerOnce) {
             this.isAlive = true; // return to alive
         }
-
     }
 
     @Override

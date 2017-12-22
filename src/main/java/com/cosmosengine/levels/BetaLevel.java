@@ -70,9 +70,9 @@ public class BetaLevel extends LevelLoader {
         this.name = "Platform 9";
 
         // load text
-        script1 = new MessageEntity(game, null, null, null, CosmosConstants.WIDTH / 2 - 250, 75, -1, -1, 50, "TRAINING ZONE - Platform 9");
+        script1 = new MessageEntity(game, null, null, null, CosmosConstants.WIDTH / 2 - 250, 75, 50, "TRAINING ZONE - Platform 9", false);
 
-        script2 = new MessageEntity(game, null, null, null, CosmosConstants.WIDTH / 2 + 150, CosmosConstants.HEIGHT / 2 + 100, -1, -1, 50, game.getObjective()); // grab objective from main class
+        script2 = new MessageEntity(game, null, null, null, CosmosConstants.WIDTH / 2 + 150, CosmosConstants.HEIGHT / 2 + 100, 50, game.getObjective(), false); // grab objective from main class
 
         // load background image
         background = ImageLoader.get().getSprite("background.jpg");

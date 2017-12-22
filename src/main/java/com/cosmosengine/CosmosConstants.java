@@ -6,8 +6,7 @@ import com.cosmosengine.inventory.Item;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.font.FontRenderContext;
-import java.awt.font.GlyphVector;
+import java.awt.geom.Rectangle2D;
 
 /**
  * This class will define all constants needed for the game.
@@ -18,7 +17,7 @@ public class CosmosConstants {
 
     public static final long PERIOD = 10; // amount in ms to wait each loop
     // (will vary depending on computer's speed)
-    public static final boolean DEBUG = false; // DEBUG CONTROL TOOL
+    public static boolean DEBUG = false; // DEBUG CONTROL TOOL
     public static boolean SOUNDS = true;
 
     public static final Font DEFAULT_FONT = new Font("HELVETICA", Font.PLAIN, (int) (12 * SCALE));
@@ -106,15 +105,19 @@ public class CosmosConstants {
     public static final String GOD_MODE = "iwillwin";
     public static final String NO_CLIP = "noclip";
 
-    public static Rectangle getStringBounds(Graphics2D g2, String str, float x, float y) {
-        FontRenderContext frc = g2.getFontRenderContext();
-        GlyphVector gv = g2.getFont().createGlyphVector(frc, str);
-        return gv.getPixelBounds(null, x, y);
+    public static Rectangle2D getStringBounds(Graphics2D g2, String str) {
+        return g2.getFont().createGlyphVector(g2.getFontMetrics().getFontRenderContext(), str).getVisualBounds();
     }
 
     public static Rectangle drawStringFromTop(Graphics2D g2, String str, float x, float y) {
-        Rectangle bounds = getStringBounds(g2, str, x, y);
-        g2.drawString(str, x, y + bounds.height);
-        return new Rectangle((int) x, (int) y, bounds.width, bounds.height);
+        Rectangle2D bounds = getStringBounds(g2, str);
+        g2.drawString(str, x, (float) (y + bounds.getHeight()));
+        return new Rectangle((int) x, (int) y, (int) bounds.getWidth(), (int) bounds.getHeight());
+    }
+
+    public static void drawCenteredCircle(Graphics2D g, int x, int y, int r) {
+        x = x - (r / 2);
+        y = y - (r / 2);
+        g.drawOval(x, y, r, r);
     }
 }

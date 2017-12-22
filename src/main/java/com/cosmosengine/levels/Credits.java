@@ -59,7 +59,7 @@ public class Credits extends LevelLoader {
         // load background image
         background = ImageLoader.get().getSprite("credits.png");
         game.player.setCanMove(true);
-        script1 = new MessageEntity(game, null, null, null, 50, 50, -1, -1, 75, "Credits...-n" + "-n" + "Main Developers:-n" + "Andres Schmois        -n" + "Miguel Sotolongo        -n" + "-n" + "Graphic Designer:-n" + "Alex Garcia        -n" + "-n" + "Special Thanks to:-n" + "Michael Gomez for providing music.                -n" + "Brandon de la Uz for assisting with graphics.                -n" + "Brent Lopez and Veda Cruz for voice acting.                -n" + "-n" + "and...        -n" + "C. Charters!        -n" + "-n" + "-n" + "The End... Free mining!                ");
+        script1 = new MessageEntity(game, null, null, null, 50, 50, 25, "Credits...-n" + "-n" + "Main Developers:-n" + "Andres Schmois-n" + "Miguel Sotolongo-n" + "-n" + "Graphic Designer:-n" + "Alex Garcia-n" + "-n" + "Special Thanks to:-n" + "Michael Gomez for providing music.-n" + "Brandon de la Uz for assisting with graphics.-n" + "Brent Lopez and Veda Cruz for voice acting.-n" + "-n" + "and...-n" + "C. Charters!-n" + "-n" + "-n" + "The End... Free mining!", true);
         // load level
         loadLevel("");
 
@@ -78,7 +78,6 @@ public class Credits extends LevelLoader {
         // act out loading text
         script1.act();
         script1.draw(g);
-        isOnLoadFinished = script1.isDone();
     }
 
     @Override

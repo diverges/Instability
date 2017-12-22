@@ -46,7 +46,7 @@ public class BlockAnim extends BlockEntity {
 
     @Override
     public void draw(Graphics g) {
-        if (isBeingCollidedDown || isBeingCollidedUp || isBeingCollidedLeft || isBeingCollidedRight || dying)
+        if (isCollided() || dying)
             super.draw(g);
         else
             constAnimSprites[constAnimStep].draw(g, me.x, me.y);

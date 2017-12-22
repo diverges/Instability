@@ -42,7 +42,7 @@ public class BlockEntity extends WallEntity implements Killable {
         super.collision();
         if (isAlive) {
             if (player.isMoving()) {
-                if ((isBeingCollidedDown && player.isMovingDown()) || (isBeingCollidedUp && player.isMovingUp()) || (isBeingCollidedLeft && player.isMovingLeft()) || (isBeingCollidedRight && player.isMovingRight())) {
+                if (isCollided()) {
                     Point playerPoint = player.getPoint();
                     double distance = new Point(playerPoint.x, (int) (playerPoint.y - player.getHeight() / 2)).distance(this.getPoint());
                     if (distance < player.distance || player.distance == -1) {

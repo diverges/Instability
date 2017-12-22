@@ -13,15 +13,12 @@ import java.awt.Rectangle;
  */
 public class WallEntity extends CosmosEntity {
 
-    boolean isBeingCollidedRight = false;
-    boolean isBeingCollidedLeft = false;
-    boolean isBeingCollidedUp = false;
-    boolean isBeingCollidedDown = false;
-    private Rectangle rightColl;
-    private Rectangle leftColl;
-    private Rectangle downColl;
-    private Rectangle upColl;
     boolean dying = false;
+
+    private Rectangle c1;
+    private Rectangle c2;
+    private Rectangle c3;
+    private Rectangle c4;
 
     public WallEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, int width, int height, long millis) {
         super(game, folder, ref, onDeath, x, y, width, height, millis);
@@ -31,24 +28,18 @@ public class WallEntity extends CosmosEntity {
     public void draw(Graphics g) {
         if (this.sprites != null)
             super.draw(g);
-        if (CosmosConstants.DEBUG) {
-            g.setColor(Color.WHITE);
-            if (this.rightColl != null && this.isBeingCollidedRight) {
-                g.drawRect(rightColl.x, rightColl.y, rightColl.width, rightColl.height);
-                g.drawString(rightColl.x + ", " + rightColl.y, rightColl.x, rightColl.y);
-            }
-            if (this.leftColl != null && this.isBeingCollidedLeft) {
-                g.drawRect(leftColl.x, leftColl.y, leftColl.width, leftColl.height);
-                g.drawString(leftColl.x + ", " + leftColl.y, leftColl.x, leftColl.y);
-            }
-            if (this.upColl != null && this.isBeingCollidedUp) {
-                g.drawRect(upColl.x, upColl.y, upColl.width, upColl.height);
-                g.drawString(upColl.x + "," + upColl.y, upColl.x, upColl.y);
-            }
-            if (this.downColl != null && this.isBeingCollidedDown) {
-                g.drawRect(downColl.x, downColl.y, downColl.width, downColl.height);
-                g.drawString(downColl.x + "," + downColl.y, downColl.x, downColl.y + me.height);
-            }
+
+        if (CosmosConstants.DEBUG && c1 != null) {
+            g.setColor(Color.RED);
+            g.drawRect(c1.x, c1.y, c1.width, c1.height);
+            g.drawRect(c2.x, c2.y, c2.width, c2.height);
+            g.drawRect(c3.x, c3.y, c3.width, c3.height);
+            g.drawRect(c4.x, c4.y, c4.width, c4.height);
+
+            c1 = null;
+            c2 = null;
+            c3 = null;
+            c4 = null;
         }
     }
 
@@ -59,97 +50,89 @@ public class WallEntity extends CosmosEntity {
 
     @Override
     public void collision() {
-        // Check to see if we are being collided from the top.
-        if (game.player.isMovingDown()) {
-            if (checkDown()) {
-                if (!game.player.getCollidingWithDown().contains(this)) {
-                    game.player.getCollidingWithDown().add(this);
-                }
-                isBeingCollidedDown = true;
-            } else if (isBeingCollidedDown) {
-                isBeingCollidedDown = false;
-                game.player.getCollidingWithDown().remove(this);
+        boolean d = game.player.isMovingDown();
+        boolean u = game.player.isMovingUp();
+        boolean r = game.player.isMovingRight();
+        boolean l = game.player.isMovingLeft();
+        Rectangle pBounds = game.player.getBounds();
+        c1 = new Rectangle(me.x - 4, me.y - 4, 4, 4);
+        c2 = new Rectangle(me.x + me.width, me.y - 4, 4, 4);
+        c3 = new Rectangle(me.x - 4, me.y + me.height, 4, 4);
+        c4 = new Rectangle(me.x + me.width, me.y + me.height, 4, 4);
+        if (d && checkDown()) {
+            if (!game.player.getCollidingWithDown().contains(this)) {
+                game.player.getCollidingWithDown().add(this);
             }
-        } else {
-            game.player.getCollidingWithDown().clear();
-            isBeingCollidedDown = false;
         }
-
-        // Check to see if we are being collided from the bottom.
-        if (game.player.isMovingUp()) {
-            if (checkUp()) {
-                if (!game.player.getCollidingWithUp().contains(this)) {
-                    game.player.getCollidingWithUp().add(this);
-                }
-                isBeingCollidedUp = true;
-            } else if (isBeingCollidedUp) {
-                isBeingCollidedUp = false;
-                game.player.getCollidingWithUp().remove(this);
+        if (u && checkUp()) {
+            if (!game.player.getCollidingWithUp().contains(this)) {
+                game.player.getCollidingWithUp().add(this);
             }
-        } else {
-            game.player.getCollidingWithUp().clear();
-            isBeingCollidedUp = false;
         }
-
-        if (game.player.isMovingRight()) {
-            if (checkRight() && !checkDown() && !checkUp()) {
-                if (!game.player.getCollidingWithRight().contains(this)) {
-                    game.player.getCollidingWithRight().add(this);
-                }
-                isBeingCollidedRight = true;
-            } else {
-                isBeingCollidedRight = false;
-                game.player.getCollidingWithRight().remove(this);
+        if (r && checkRight()) {
+            if (!game.player.getCollidingWithRight().contains(this)) {
+                game.player.getCollidingWithRight().add(this);
             }
-
-        } else {
-            game.player.getCollidingWithRight().clear();
-            isBeingCollidedRight = false;
         }
-
-        // Check to see if we are being collided from the left.
-        if (game.player.isMovingLeft()) {
-            if (checkLeft() && !checkDown() && !checkUp()) {
-                if (!game.player.getCollidingWithLeft().contains(this)) {
-                    game.player.getCollidingWithLeft().add(this);
-                }
-                isBeingCollidedLeft = true;
-            } else if (isBeingCollidedLeft) {
-                isBeingCollidedLeft = false;
-                game.player.getCollidingWithLeft().remove(this);
+        if (l && checkLeft()) {
+            if (!game.player.getCollidingWithLeft().contains(this)) {
+                game.player.getCollidingWithLeft().add(this);
             }
-        } else {
-            game.player.getCollidingWithLeft().clear();
-            isBeingCollidedLeft = false;
         }
+        boolean cd = game.player.isCollidingDown();
+        boolean cu = game.player.isCollidingUp();
+        boolean cr = game.player.isCollidingRight();
+        boolean cl = game.player.isCollidingLeft();
+        boolean c1Collide = pBounds.intersects(c1);
+        boolean c2Collide = pBounds.intersects(c2);
+        boolean c3Collide = pBounds.intersects(c3);
+        boolean c4Collide = pBounds.intersects(c4);
+        boolean cornerCollide = c1Collide || c2Collide || c3Collide || c4Collide;
+        if (cornerCollide && (d || u) && (l || r)) {
+            if (d && r && (!cd && !cr) && c1Collide) {
+                game.player.forceStopMoving();
+            } else if (d && l && (!cd && !cl) && c2Collide) {
+                game.player.forceStopMoving();
+            } else if (u && r && (!cu && !cr) && c3Collide) {
+                game.player.forceStopMoving();
+            } else if (u && l && (!cu && !cl) && c4Collide) {
+                game.player.forceStopMoving();
+            }
+        }
+    }
 
+    public boolean isCollided() {
+        if (!isAlive || dying)
+            return false;
+        Rectangle collide = new Rectangle(me.x - 4, me.y - 4, me.width + 4, me.height + 4);
+        return game.player.getBounds().intersects(collide);
     }
 
     private boolean checkRight() {
         if (!isAlive || dying)
             return false;
-        rightColl = new Rectangle(me.x - 4, me.y, (int) this.getWidth(), (int) this.getHeight());
+        Rectangle rightColl = new Rectangle(me.x - 4, me.y, me.width, me.height);
         return game.player.getBounds().intersects(rightColl);
     }
 
     private boolean checkLeft() {
         if (!isAlive || dying)
             return false;
-        leftColl = new Rectangle(me.x, me.y, (int) this.getWidth() + 4, (int) this.getHeight());
+        Rectangle leftColl = new Rectangle(me.x, me.y, me.width + 4, me.height);
         return game.player.getBounds().intersects(leftColl);
     }
 
     private boolean checkDown() {
         if (!isAlive || dying)
             return false;
-        downColl = new Rectangle(me.x, me.y - 4, (int) this.getWidth(), (int) this.getHeight());
+        Rectangle downColl = new Rectangle(me.x, me.y - 4, me.width, me.height);
         return game.player.getBounds().intersects(downColl);
     }
 
     private boolean checkUp() {
         if (!isAlive || dying)
             return false;
-        upColl = new Rectangle(me.x, me.y, (int) this.getWidth(), (int) this.getHeight() + 4);
+        Rectangle upColl = new Rectangle(me.x, me.y, me.width, me.height + 4);
         return game.player.getBounds().intersects(upColl);
     }
 

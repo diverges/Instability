@@ -33,7 +33,7 @@ public class ImageLoader {
     }
 
     public CosmosSprite getSprite(String ref, boolean fillScreen) {
-        String identifier = ref + (fillScreen ? "F" : "");
+        String identifier = ref + (fillScreen ? Integer.toString(CosmosConstants.WIDTH) + Integer.toString(CosmosConstants.HEIGHT) : "");
         if (images.get(identifier) != null)
             return images.get(identifier);
         CosmosSprite sprite = null;

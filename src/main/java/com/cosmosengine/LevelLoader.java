@@ -46,7 +46,8 @@ import java.util.Scanner;
  * -'E' : Radonite <br />
  * -'U' : Uranium <br />
  * -'g' : Gas Block<br />
- * -'X' : No Path Block -'[b;text;reference value]' : Invisible block<br />
+ * -'X' : No Path Block<br />
+ * -'[b;text;reference value]' : Invisible block<br />
  * --- List of Interactive Objects ---<br />
  * -'[tz;width;height;reference name;trigger amnt]' - A trigger block with a specific name "reference name" that is used by a level to activate a specific event with that name. Trigger amount
  * specifies how many times event should execute, "1" - only once "0" - infinitely many<br />
@@ -223,7 +224,7 @@ public abstract class LevelLoader implements Loadable, Cloneable {
         switch (obj) {
             case "msg":
                 // Load Message Entity
-                levelTextureObjects.add(new MessageEntity(game, null, null, null, xPos - 40, yPos, 40, 40, Long.parseLong(components[2]), components[1]));
+                levelTextureObjects.add(new MessageEntity(game, null, null, null, xPos - 40, yPos, Long.parseLong(components[2]), components[1], false));
                 break;
             case "tw":
                 // Load timed wall

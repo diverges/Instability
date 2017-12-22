@@ -14,6 +14,7 @@ import com.cosmosengine.levels.menu.MenuLevelSelect;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -29,7 +30,6 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
     private Inventory inventory;
     // over screen
 
-    private boolean moving = false;
     private ArrayList<WallEntity> collidingWithDown = new ArrayList<>();
     private ArrayList<WallEntity> collidingWithLeft = new ArrayList<>();
     private ArrayList<WallEntity> collidingWithRight = new ArrayList<>();
@@ -60,6 +60,9 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
     private String cheat = "";
     private boolean enteredCheatMode = false;
 
+    private final static int COLLISION_RADIUS = (int) (100 * CosmosConstants.SCALE);
+    public Rectangle collisionRectangle;
+
     /**
      * Sprite constructor
      *
@@ -81,12 +84,40 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
 
     @Override
     public void collision() {
+        int w = me.width + (COLLISION_RADIUS);
+        int h = me.height + (COLLISION_RADIUS);
+        collisionRectangle = new Rectangle((int) (me.x + ((getWidth() - w) / 2)), (int) (me.y + ((getHeight() - h) / 2)), w, h);
+
+        if (!isMoving()) {
+            this.collidingWithDown.clear();
+            this.collidingWithLeft.clear();
+            this.collidingWithRight.clear();
+            this.collidingWithUp.clear();
+        } else {
+            if (!isMovingUp()) {
+                this.collidingWithUp.clear();
+            }
+            if (!isMovingDown()) {
+                this.collidingWithDown.clear();
+            }
+            if (!isMovingLeft()) {
+                this.collidingWithLeft.clear();
+            }
+            if (!isMovingRight()) {
+                this.collidingWithRight.clear();
+            }
+
+            collidingWithRight.removeIf(wallEntity -> !wallEntity.isCollided());
+            collidingWithLeft.removeIf(wallEntity -> !wallEntity.isCollided());
+            collidingWithUp.removeIf(wallEntity -> !wallEntity.isCollided());
+            collidingWithDown.removeIf(wallEntity -> !wallEntity.isCollided());
+        }
     }
 
     @Override
     public void act() {
 
-        if (this.block != null && this.moving) {
+        if (this.block != null && this.isMoving()) {
             block.damageStep++;
 
             // after a certain interval this objects will take damage
@@ -119,12 +150,18 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
         this.collidingWithLeft.clear();
         this.collidingWithRight.clear();
         this.collidingWithUp.clear();
-        moving = false;
         canMove = false;
     }
 
+    public void forceStopMoving() {
+        isMovingUp = false;
+        isMovingDown = false;
+        isMovingLeft = false;
+        isMovingRight = false;
+    }
+
     public boolean isMoving() {
-        return moving && canMove;
+        return (isMovingDown || isMovingRight || isMovingLeft || isMovingUp) && canMove;
     }
 
     public boolean isMovingRight() {
@@ -245,20 +282,22 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
     @Override
     public void draw(Graphics g) {
         super.draw(g);
+        Graphics2D g2 = (Graphics2D) g;
 
         // display armor
         g.setColor(Color.RED);
-        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Armor: " + this.armor, 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop(g2, "Armor: " + this.armor, 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
 
         // display the drill power
         g.setColor(Color.GREEN);
-        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Saw Power: " + this.damagePower, 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop(g2, "Saw Power: " + this.damagePower, 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
 
         if (enteredCheatMode) {
             // entered cheat mode
             g.setColor(Color.GREEN);
-            CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "ENTER CHEAT: " + cheat, 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
+            CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop(g2, "ENTER CHEAT: " + cheat, 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
         }
+
         if (dealtDamage != -1) {
             drawStep++;
             // display damage dealt to player
@@ -273,6 +312,38 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
         // display inventory
         if (this.inventory.isDisplay())
             inventory.displayInventory(g);
+
+        if (CosmosConstants.DEBUG) {
+            if (collisionRectangle != null) {
+                g.setColor(Color.RED);
+                g.drawRect(collisionRectangle.x, collisionRectangle.y, collisionRectangle.width, collisionRectangle.height);
+            }
+            g.setColor(Color.WHITE);
+            if (this.collidingWithDown != null) {
+                for (WallEntity entity : collidingWithDown) {
+                    g.drawRect((int) entity.getX(), (int) entity.getY(), (int) entity.getWidth(), (int) entity.getHeight());
+                    g.drawString(entity.getX() + ", " + entity.getY(), (int) entity.getX(), (int) entity.getY());
+                }
+            }
+            if (this.collidingWithUp != null) {
+                for (WallEntity entity : collidingWithUp) {
+                    g.drawRect((int) entity.getX(), (int) entity.getY(), (int) entity.getWidth(), (int) entity.getHeight());
+                    g.drawString(entity.getX() + ", " + entity.getY(), (int) entity.getX(), (int) entity.getY());
+                }
+            }
+            if (this.collidingWithLeft != null) {
+                for (WallEntity entity : collidingWithLeft) {
+                    g.drawRect((int) entity.getX(), (int) entity.getY(), (int) entity.getWidth(), (int) entity.getHeight());
+                    g.drawString(entity.getX() + ", " + entity.getY(), (int) entity.getX(), (int) entity.getY());
+                }
+            }
+            if (this.collidingWithRight != null) {
+                for (WallEntity entity : collidingWithRight) {
+                    g.drawRect((int) entity.getX(), (int) entity.getY(), (int) entity.getWidth(), (int) entity.getHeight());
+                    g.drawString(entity.getX() + ", " + entity.getY(), (int) entity.getX(), (int) entity.getY());
+                }
+            }
+        }
 
     }
 
@@ -315,22 +386,18 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
                 case KeyEvent.VK_UP:
                 case KeyEvent.VK_W:
                     isMovingUp = true;
-                    moving = true;
                     break;
                 case KeyEvent.VK_RIGHT:
                 case KeyEvent.VK_D:
                     isMovingRight = true;
-                    moving = true;
                     break;
                 case KeyEvent.VK_DOWN:
                 case KeyEvent.VK_S:
                     isMovingDown = true;
-                    moving = true;
                     break;
                 case KeyEvent.VK_LEFT:
                 case KeyEvent.VK_A:
                     isMovingLeft = true;
-                    moving = true;
                     break;
             }
             me.setBounds(me.x, me.y, me.width, me.height);
@@ -362,6 +429,10 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
                             break;
                         case CosmosConstants.NO_CLIP:
                             game.noClip = !game.noClip;
+                            validCheat = true;
+                            break;
+                        case "debug":
+                            CosmosConstants.DEBUG = !CosmosConstants.DEBUG;
                             validCheat = true;
                             break;
                     }
@@ -442,9 +513,6 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
                     break;
             }
         }
-
-        if (!isMovingUp && !isMovingDown && !isMovingLeft && !isMovingRight)
-            moving = false;
     }
 
     @Override

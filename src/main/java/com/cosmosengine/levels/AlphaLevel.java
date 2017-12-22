@@ -74,7 +74,7 @@ public class AlphaLevel extends LevelLoader {
 
         // @formatter:on
 
-        script1 = new MessageEntity(game, null, null, null, 100, 100, -1, -1, 50, "You must wait :)");
+        script1 = new MessageEntity(game, null, null, null, 100, 100, 50, "You must wait :)", true);
 
         this.levelInteractiveObjects.add(new TerminalEntity(game, null, null, null, 100, 100, "BetaLevel"));
 
@@ -113,7 +113,6 @@ public class AlphaLevel extends LevelLoader {
         // act out loading text
         script1.act();
         script1.draw(g);
-        isOnLoadFinished = script1.isDone();
     }
 
     @Override
