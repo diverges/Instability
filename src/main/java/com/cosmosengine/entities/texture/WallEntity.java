@@ -62,39 +62,40 @@ public class WallEntity extends CosmosEntity {
         // Check to see if we are being collided from the top.
         if (game.player.isMovingDown()) {
             if (checkDown()) {
-                if (!game.player.getCollidingWithDown().contains(this))
+                if (!game.player.getCollidingWithDown().contains(this)) {
                     game.player.getCollidingWithDown().add(this);
+                }
                 isBeingCollidedDown = true;
             } else if (isBeingCollidedDown) {
                 isBeingCollidedDown = false;
                 game.player.getCollidingWithDown().remove(this);
             }
         } else {
-            if (game.player.getCollidingWithDown().contains(this))
-                game.player.getCollidingWithDown().remove(this);
+            game.player.getCollidingWithDown().clear();
             isBeingCollidedDown = false;
         }
 
         // Check to see if we are being collided from the bottom.
         if (game.player.isMovingUp()) {
             if (checkUp()) {
-                if (!game.player.getCollidingWithUp().contains(this))
+                if (!game.player.getCollidingWithUp().contains(this)) {
                     game.player.getCollidingWithUp().add(this);
+                }
                 isBeingCollidedUp = true;
             } else if (isBeingCollidedUp) {
                 isBeingCollidedUp = false;
                 game.player.getCollidingWithUp().remove(this);
             }
         } else {
-            if (game.player.getCollidingWithUp().contains(this))
-                game.player.getCollidingWithUp().remove(this);
+            game.player.getCollidingWithUp().clear();
             isBeingCollidedUp = false;
         }
 
         if (game.player.isMovingRight()) {
             if (checkRight() && !checkDown() && !checkUp()) {
-                if (!game.player.getCollidingWithRight().contains(this))
+                if (!game.player.getCollidingWithRight().contains(this)) {
                     game.player.getCollidingWithRight().add(this);
+                }
                 isBeingCollidedRight = true;
             } else {
                 isBeingCollidedRight = false;
@@ -102,24 +103,23 @@ public class WallEntity extends CosmosEntity {
             }
 
         } else {
-            if (game.player.getCollidingWithRight().contains(this))
-                game.player.getCollidingWithRight().remove(this);
+            game.player.getCollidingWithRight().clear();
             isBeingCollidedRight = false;
         }
 
         // Check to see if we are being collided from the left.
         if (game.player.isMovingLeft()) {
             if (checkLeft() && !checkDown() && !checkUp()) {
-                if (!game.player.getCollidingWithLeft().contains(this))
+                if (!game.player.getCollidingWithLeft().contains(this)) {
                     game.player.getCollidingWithLeft().add(this);
+                }
                 isBeingCollidedLeft = true;
             } else if (isBeingCollidedLeft) {
                 isBeingCollidedLeft = false;
                 game.player.getCollidingWithLeft().remove(this);
             }
         } else {
-            if (game.player.getCollidingWithLeft().contains(this))
-                game.player.getCollidingWithLeft().remove(this);
+            game.player.getCollidingWithLeft().clear();
             isBeingCollidedLeft = false;
         }
 
