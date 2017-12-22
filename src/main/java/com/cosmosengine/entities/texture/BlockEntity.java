@@ -15,18 +15,18 @@ import java.awt.Point;
  */
 public class BlockEntity extends WallEntity implements Killable {
 
-    int health = 40;
-    int finalHealth = 1;
-    PlayerEntity player;
+    private int health;
+    private int finalHealth;
+    private PlayerEntity player;
     // damage timer
     public int damageStep = 100;
 
     // death
-    int deathTimer = 0;
-    int deathStep = 0;
-    boolean respawn = false;
+    private int deathTimer = 0;
+    private int deathStep = 0;
+    private boolean respawn;
 
-    Item onDeathDrop;
+    private Item onDeathDrop;
 
     public BlockEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, int width, int height, Item onDeathDrop, int health, boolean respawn) {
         super(game, folder, ref, onDeath, x, y, width, height, -1);
@@ -131,22 +131,22 @@ public class BlockEntity extends WallEntity implements Killable {
         if (!dying)
             super.draw(g);
         else
-            onDeathSprites[deathStep].draw(g, (int) me.x, (int) me.y);
+            onDeathSprites[deathStep].draw(g, me.x, me.y);
     }
 
     /**
      * On death item add event.
      */
-    public void deathDrop() {
-        if (CosmosConstants.debug)
+    void deathDrop() {
+        if (CosmosConstants.DEBUG)
             System.out.println("DEATH!");
         if (this.onDeathDrop != null) {
-            game.level.getLevelInteractiveObjects()
-                      .add(new DroppedItemEntity(game, null, onDeathDrop.getRef(), null, (int) me.x, (int) me.y, (int) me.width, (int) me.height, -1, onDeathDrop, 1, false));
+            game.level.getLevelInteractiveObjects().add(new DroppedItemEntity(game, null, onDeathDrop.getRef(), null, me.x, me.y, me.width, me.height, -1, onDeathDrop, 1, false));
             //game.player.getInventory().add(onDeathDrop, 1);
         }
     }
 
+    @Override
     public int dealDamage(int damage) {
         if (sprites.length > 1) {
             int step = health / this.sprites.length;
@@ -154,7 +154,7 @@ public class BlockEntity extends WallEntity implements Killable {
                 setCurrent(step);
         }
         this.health -= damage;
-        if (CosmosConstants.debug)
+        if (CosmosConstants.DEBUG)
             System.out.println(health);
         return damage;
     }

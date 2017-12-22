@@ -25,8 +25,8 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
     /*
      * Graphics and Buffer variables.
      */
-    public BufferStrategy buffer;
-    public Graphics graphics;
+    private BufferStrategy buffer;
+    private Graphics graphics;
 
     /*
      * Game Components
@@ -41,7 +41,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
      * Game Attributes
      */
     // specify the current objective to display onLoad()
-    private String currentObjective = "No objective, you're in debug mode...";
+    private String currentObjective = "No objective, you're in DEBUG mode...";
     private boolean isPaused = false; // control pause status if game
     public boolean noclip = false;
     private HashMap<Integer, ItemSlot> slots;
@@ -55,9 +55,9 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
         // SoundLoader.get().getSound("background.mid").playSound();
 
         // define center
-        CosmosConstants.x_Offset = CosmosConstants.WIDTH / 2;
-        CosmosConstants.y_Offset = CosmosConstants.HEIGHT / 2;
-        player = new PlayerEntity(this, "player_sprites", "player-move01.png;player-move02.png;player-move03.png;player-move04.png;player-move05.png;", null, CosmosConstants.x_Offset, CosmosConstants.y_Offset, 35, 35, -1, 3); // load player
+        CosmosConstants.X_OFFSET = CosmosConstants.WIDTH / 2;
+        CosmosConstants.Y_OFFSET = CosmosConstants.HEIGHT / 2;
+        player = new PlayerEntity(this, "player_sprites", "player-move01.png;player-move02.png;player-move03.png;player-move04.png;player-move05.png;", null, CosmosConstants.X_OFFSET, CosmosConstants.Y_OFFSET, 35, 35, -1, 3); // load player
         menu = new MenuMain(this); // load main menu on boot
 
     }
@@ -66,6 +66,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
      * Loads all game components.
      */
 
+    @Override
     public void addNotify() {
         super.addNotify(); // load canvas functions
 
@@ -86,7 +87,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
     /**
      * Start main thread
      */
-    public void startGame() {
+    private void startGame() {
         if (mainThread == null) {
             mainThread = new Thread(this);
             mainThread.start();
@@ -96,6 +97,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
     /**
      * Main thread: updates, renders, and draws the game
      */
+    @Override
     public void run() {
         while (true) {
             // check if no menu is loaded
@@ -109,7 +111,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
                 draw();
 
                 try {
-                    Thread.sleep(CosmosConstants.period);
+                    Thread.sleep(CosmosConstants.PERIOD);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -120,9 +122,9 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
                         level.isLoading = false;
                         try {
                             /*
-							 * Wait a minimum of 2 seconds before displaying the
-							 * level
-							 */
+                             * Wait a minimum of 2 seconds before displaying the
+                             * level
+                             */
                             Thread.sleep(2000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -132,12 +134,12 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
 
             } else { // when menu is loaded
                 if (level != null)
-                    level.bg_sound.stopSound();
+                    level.backgroundSound.stopSound();
                 level = null;
                 render();
                 draw();
                 try {
-                    Thread.sleep(CosmosConstants.period);
+                    Thread.sleep(CosmosConstants.PERIOD);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -149,16 +151,16 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
      * Update all dynamic variables of game and responsible for all drawing and
      * movement permission granted to entities.
      */
-    public void update() {
+    private void update() {
         if (!isPaused && !noclip)
             collision();
         if (!isPaused)
             sideScroll();
 
-		/*
-		 * Call the update , act(), method from each individual object if game
-		 * is not paused
-		 */
+        /*
+         * Call the update , act(), method from each individual object if game
+         * is not paused
+         */
         if (!isPaused) {
             for (CosmosEntity obj : level.getLevelEnemyObjects())
                 if (obj.isAlive())
@@ -210,65 +212,61 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
     /**
      * Side-scrolling
      */
-    public void sideScroll() {
-        CosmosConstants.x_Offset = CosmosConstants.WIDTH / 2;
-        CosmosConstants.y_Offset = CosmosConstants.HEIGHT / 2;
-        CosmosConstants.screenXBound = CosmosConstants.WIDTH - CosmosConstants.x_Offset;
-        CosmosConstants.screenYBound = CosmosConstants.HEIGHT - CosmosConstants.y_Offset;
+    private void sideScroll() {
+        CosmosConstants.X_OFFSET = CosmosConstants.WIDTH / 2;
+        CosmosConstants.Y_OFFSET = CosmosConstants.HEIGHT / 2;
+        CosmosConstants.SCREEN_X_BOUND = CosmosConstants.WIDTH - CosmosConstants.X_OFFSET;
+        CosmosConstants.SCREEN_Y_BOUND = CosmosConstants.HEIGHT - CosmosConstants.Y_OFFSET;
         // left and right side-scrolling
         if (player.isMoving()) {
             if (player.isMovingRight() & !player.isCollidingRight()) {
-
                 // move room right
                 for (CosmosEntity obj : level.getLevelTextureObjects())
-                    obj.setX((int) (obj.getX() - player.Dx));
+                    obj.setX((int) (obj.getX() - player.dX));
                 for (CosmosEntity obj : level.getLevelInteractiveObjects())
-                    obj.setX((int) (obj.getX() - player.Dx));
+                    obj.setX((int) (obj.getX() - player.dX));
                 for (CosmosEntity obj : level.getLevelEnemyObjects())
-                    obj.setX((int) (obj.getX() - player.Dx));
+                    obj.setX((int) (obj.getX() - player.dX));
 
-                level.background_x -= player.Dx;
+                level.backgroundX -= player.dX;
 
             }
             if (player.isMovingLeft() & !player.isCollidingLeft()) {
-
                 // move room left
                 for (CosmosEntity obj : level.getLevelTextureObjects())
-                    obj.setX((int) (obj.getX() + player.Dx));
+                    obj.setX((int) (obj.getX() + player.dX));
                 for (CosmosEntity obj : level.getLevelInteractiveObjects())
-                    obj.setX((int) (obj.getX() + player.Dx));
+                    obj.setX((int) (obj.getX() + player.dX));
                 for (CosmosEntity obj : level.getLevelEnemyObjects())
-                    obj.setX((int) (obj.getX() + player.Dx));
+                    obj.setX((int) (obj.getX() + player.dX));
 
-                level.background_x += player.Dx;
+                level.backgroundX += player.dX;
 
             }
 
             // up and down side-scrolling
             if (player.isMovingDown() & !player.isCollidingDown()) {
-
                 // move entire room down
                 for (CosmosEntity obj : level.getLevelTextureObjects())
-                    obj.setY((int) (obj.getY() - player.Dy));
+                    obj.setY((int) (obj.getY() - player.dY));
                 for (CosmosEntity obj : level.getLevelInteractiveObjects())
-                    obj.setY((int) (obj.getY() - player.Dy));
+                    obj.setY((int) (obj.getY() - player.dY));
                 for (CosmosEntity obj : level.getLevelEnemyObjects())
-                    obj.setY((int) (obj.getY() - player.Dy));
+                    obj.setY((int) (obj.getY() - player.dY));
 
-                level.background_y -= player.Dy;
+                level.backgroundY -= player.dY;
 
             }
             if (player.isMovingUp() & !player.isCollidingUp()) {
-
                 // move entire room up
                 for (CosmosEntity obj : level.getLevelTextureObjects())
-                    obj.setY((int) (obj.getY() + player.Dy));
+                    obj.setY((int) (obj.getY() + player.dY));
                 for (CosmosEntity obj : level.getLevelInteractiveObjects())
-                    obj.setY((int) (obj.getY() + player.Dy));
+                    obj.setY((int) (obj.getY() + player.dY));
                 for (CosmosEntity obj : level.getLevelEnemyObjects())
-                    obj.setY((int) (obj.getY() + player.Dy));
+                    obj.setY((int) (obj.getY() + player.dY));
 
-                level.background_y += player.Dy;
+                level.backgroundY += player.dY;
 
             }
         }
@@ -278,7 +276,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
     /**
      * Render components
      */
-    public void render() {
+    private void render() {
         graphics = buffer.getDrawGraphics();
         // refresh image
         graphics.setColor(Color.black);
@@ -289,7 +287,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
             if (hud == null)
                 hud = new CosmosHUD(this);
             hud.draw(graphics);
-            if (CosmosConstants.debug)
+            if (CosmosConstants.DEBUG)
                 debug(graphics);
             player.draw(graphics);
             if (level.isLoading) // hold on load
@@ -315,7 +313,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
     /**
      * Draw components
      */
-    public void draw() {
+    private void draw() {
         if (!buffer.contentsLost()) {
             buffer.show();
 
@@ -333,7 +331,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
      */
 
     public void startLevel(LevelLoader level) {
-        slots = new HashMap<Integer, ItemSlot>();
+        slots = new HashMap<>();
         for (int i = 0; i < player.getInventory().getItemSlots().size(); i++) {
             ItemSlot slot = player.getInventory().getItemSlots().get(i);
             slots.put(i, new ItemSlot(slot.getX(), slot.getY(), slot.getMax()));
@@ -349,8 +347,8 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
         }
 
         if (level != null) {
-            if (level.bg_sound != null) {
-                level.bg_sound.stopSound();
+            if (level.backgroundSound != null) {
+                level.backgroundSound.stopSound();
             }
             this.level = null;
         }
@@ -371,15 +369,19 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
         }
     }
 
+    @Override
     public void mouseClicked(MouseEvent e) {
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         if (player.getInventory().isDisplay()) {
             player.getInventory().mousePressed(e);
@@ -387,11 +389,12 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
         if (menu == null) {
             if (hud != null)
                 hud.mousePressed(e);
-        } else if (menu != null) {
+        } else {
             menu.mousePressed(e);
         }
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
         if (player.getInventory().isDisplay()) {
             player.getInventory().mouseReleased(e);
@@ -405,12 +408,14 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
         }
     }
 
+    @Override
     public void mouseDragged(MouseEvent e) {
         if (menu == null) {
             player.mouseDragged(e);
         }
     }
 
+    @Override
     public void mouseMoved(MouseEvent e) {
         if (player.getInventory().isDisplay())
             player.getInventory().mouseMoved(e);

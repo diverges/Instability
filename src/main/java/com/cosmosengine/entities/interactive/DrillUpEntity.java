@@ -10,7 +10,7 @@ import java.awt.Graphics;
  */
 public class DrillUpEntity extends CosmosEntity {
 
-    int amount = 0;
+    private int amount;
 
     /**
      * @param amount number to increment power by

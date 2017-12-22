@@ -16,7 +16,7 @@ public class EventTriggerZoneEntity extends CosmosEntity {
     private String eventID;
     private boolean isEventTriggered = false;
     private boolean wasEventTriggered = false;
-    private boolean onlyTriggerOnce = false;
+    private boolean onlyTriggerOnce;
 
     /**
      * @param game
@@ -55,7 +55,7 @@ public class EventTriggerZoneEntity extends CosmosEntity {
     public void collision() {
         if (isAlive) {
             // redraw rectangle
-            this.me = new Rectangle((int) me.x, (int) me.y, (int) me.width, (int) me.height);
+            this.me = new Rectangle(me.x, me.y, me.width, me.height);
             if (me.contains(game.player.getPoint())) {
                 this.isEventTriggered = true;
             }
@@ -67,10 +67,11 @@ public class EventTriggerZoneEntity extends CosmosEntity {
 
     }
 
+    @Override
     public void draw(Graphics g) {
-        if (CosmosConstants.debug) {
+        if (CosmosConstants.DEBUG) {
             g.setColor(Color.ORANGE);
-            g.drawRect((int) me.x, (int) me.y, (int) me.width, (int) me.height);
+            g.drawRect(me.x, me.y, me.width, me.height);
         }
     }
 

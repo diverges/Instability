@@ -17,11 +17,11 @@ public class GasBlockEntity extends BlockAnim {
     public void deathDrop() {
         if (game.player.getDamagePower() >= 10) {
             game.level.getLevelInteractiveObjects()
-                      .add(new DroppedItemEntity(game, null, CosmosConstants.OXYGEN.getRef(), null, (int) me.x, (int) me.y, (int) me.width, (int) me.height, -1, CosmosConstants.OXYGEN, 1, false));
+                      .add(new DroppedItemEntity(game, null, CosmosConstants.OXYGEN.getRef(), null, me.x, me.y, me.width, me.height, -1, CosmosConstants.OXYGEN, 1, false));
         }
 
         if (game.player.getDamagePower() >= 15)
             game.level.getLevelInteractiveObjects()
-                      .add(new DroppedItemEntity(game, null, CosmosConstants.CHLORINE.getRef(), null, (int) me.x, (int) me.y, (int) me.width, (int) me.height, -1, CosmosConstants.CHLORINE, 1, false));
+                      .add(new DroppedItemEntity(game, null, CosmosConstants.CHLORINE.getRef(), null, me.x, me.y, me.width, me.height, -1, CosmosConstants.CHLORINE, 1, false));
     }
 }

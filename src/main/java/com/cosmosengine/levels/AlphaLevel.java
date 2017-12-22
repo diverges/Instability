@@ -14,6 +14,7 @@ import java.awt.Graphics;
 /**
  * Alpha Level for testing purposes only.
  */
+@SuppressWarnings("WeakerAccess")
 public class AlphaLevel extends LevelLoader {
     public static final String NAME = "alpha";
     MessageEntity script1;
@@ -24,17 +25,63 @@ public class AlphaLevel extends LevelLoader {
         super(game);
         this.name = "Alpha Level";
         // draw level string
-        level = "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n" + "wS:#:::::::::::::::::::::::::::::::::::ww:::::::::::::::::::::::::w\n" + "w:::::::::::::#:::::::::::::::::::::::ww:::::::wwwwwww::::::::::::w\n" + "w:::::::::::::#:::::::::::::::::::::::ww:::::::w:::::w::::::::::::w\n" + "w:::wwwwwwwww:#:::#:::::::::::::::::::ww:::::::w:::::w::::::::::::w\n" + "w:::::::::::::w:::#:::::::::::::::::ww:::::::::w:::::w::::::::::::w\n" + "w:::::::::::::w:::#::::::::::::::::ww::::::::::wwwwwww::::::::::::w\n" + "w:::::::::::::w:::wwwww::::::::wwww:::::::::::::::::::::::::::::::w\n" + "w::eeee:::::::w:::w::::::::::::w::w::::ww:::::::::::::::::::::::::w\n" + "w:::::::::::::::::w::::::::::::w::w::::ww:::::::::::::::::::::::::w\n" + "wwwwwwwwwwwwwwwwwww::::::::::::w::w::::ww::::::wwwwww:::::www:::::w\n" + "w::::::::::::::::::::::::::::::wwww::::ww:::::ww:::www::::www:::::w\n" + "w::::::::::::::w:::::w::::::::::::::::ww::::ww:::::ww:::::www:::::w\n" + "w::::::::::::::w:::::w:::::::::::::::::ww::::::::::ww:::::www:::::w\n" + "w::::::::::::::w:::::w::::::wwwww::::::ww:::::::::ww::::::www:::::w\n" + "w::::::::::::::w:::::w::::::wwwww::::::ww::::::::ww:::::::www:::::w\n" + "w:::::::::::::::::::::::::::wwwww::::::::::::::wwwwww:::::www:::::w\n" + "w:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::w\n" + "w:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::w\n" + "wwwwwwwwwwwddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n" + "wwwwwwwwwwwddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n" + "wwwwwwwwwwwddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n" + "wwwwwwwwwwdddddddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n" + "wwwwwwwwwwdwwwwddddddddddwwwwddddddddddddddwwwdddddwwwwwwwwwwwwwwww\n" + "wwwwwwwwwwdwwwwdwwwwwwwddwwwwwwdddddwwwwddddwwwwddddddddwwwwwwwwwww\n" + "wwwdddddddddddddwwwwwwwddwwwwwwwwwdddwwwdddddwwwdddwwwwwwwwwwwwwwww\n" + "wwwddddddddwwwwdwwwwwwwddwwwwwwwddddwwwwddddddddddddddddddwwwwwwwww\n" + "wwwdddddddddddddwwwwwwdddwwwwwwwddddwwwwwwwwwwwwwwwwwwwddwwwwwwwww\n" + "wwwwwwwwwwwdwwwwwwwwwdddwwwwwwwwddwwwwwwwwdddwwwwwwwwwwwdwwwwwwwwww\n" + "wwwwwwwwwwwdwwwwwwwwwdwwwwddddddddwwwwwwwwdddwwwwwwwwwwwdwwwwwwwwww\n" + "wwwwwwwwwwwddddddddddddddddwwwwwddwwwwwwwwdddddddddddddddwwwwwwwwww\n" + "wwwwwwwwwwwddddddddddddddddwwwwwddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n" + "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n";
 
-        String complex = "[msg;The Game, I am testing-nThe splitting -nof-nstrings.;50]\n" + "[tw;1500;0]\n" + "[tw;1500;0]\n" + "[tw;1500;0]\n" + "[tw;1500;0]\n" + "[tw;1500;0]\n" + "[tw;1500;0]";
+        // @formatter:off
+
+        level = ""
+                + "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n"
+                + "wS:#:::::::::::::::::::::::::::::::::::ww:::::::::::::::::::::::::w\n"
+                + "w:::::::::::::#:::::::::::::::::::::::ww:::::::wwwwwww::::::::::::w\n"
+                + "w:::::::::::::#:::::::::::::::::::::::ww:::::::w:::::w::::::::::::w\n"
+                + "w:::wwwwwwwww:#:::#:::::::::::::::::::ww:::::::w:::::w::::::::::::w\n"
+                + "w:::::::::::::w:::#:::::::::::::::::ww:::::::::w:::::w::::::::::::w\n"
+                + "w:::::::::::::w:::#::::::::::::::::ww::::::::::wwwwwww::::::::::::w\n"
+                + "w:::::::::::::w:::wwwww::::::::wwww:::::::::::::::::::::::::::::::w\n"
+                + "w::eeee:::::::w:::w::::::::::::w::w::::ww:::::::::::::::::::::::::w\n"
+                + "w:::::::::::::::::w::::::::::::w::w::::ww:::::::::::::::::::::::::w\n"
+                + "wwwwwwwwwwwwwwwwwww::::::::::::w::w::::ww::::::wwwwww:::::www:::::w\n"
+                + "w::::::::::::::::::::::::::::::wwww::::ww:::::ww:::www::::www:::::w\n"
+                + "w::::::::::::::w:::::w::::::::::::::::ww::::ww:::::ww:::::www:::::w\n"
+                + "w::::::::::::::w:::::w:::::::::::::::::ww::::::::::ww:::::www:::::w\n"
+                + "w::::::::::::::w:::::w::::::wwwww::::::ww:::::::::ww::::::www:::::w\n"
+                + "w::::::::::::::w:::::w::::::wwwww::::::ww::::::::ww:::::::www:::::w\n"
+                + "w:::::::::::::::::::::::::::wwwww::::::::::::::wwwwww:::::www:::::w\n"
+                + "w:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::w\n"
+                + "w:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::w\n"
+                + "wwwwwwwwwwwddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n"
+                + "wwwwwwwwwwwddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n"
+                + "wwwwwwwwwwwddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n"
+                + "wwwwwwwwwwdddddddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n"
+                + "wwwwwwwwwwdwwwwddddddddddwwwwddddddddddddddwwwdddddwwwwwwwwwwwwwwww\n"
+                + "wwwwwwwwwwdwwwwdwwwwwwwddwwwwwwdddddwwwwddddwwwwddddddddwwwwwwwwwww\n"
+                + "wwwdddddddddddddwwwwwwwddwwwwwwwwwdddwwwdddddwwwdddwwwwwwwwwwwwwwww\n"
+                + "wwwddddddddwwwwdwwwwwwwddwwwwwwwddddwwwwddddddddddddddddddwwwwwwwww\n"
+                + "wwwdddddddddddddwwwwwwdddwwwwwwwddddwwwwwwwwwwwwwwwwwwwddwwwwwwwwww\n"
+                + "wwwwwwwwwwwdwwwwwwwwwdddwwwwwwwwddwwwwwwwwdddwwwwwwwwwwwdwwwwwwwwww\n"
+                + "wwwwwwwwwwwdwwwwwwwwwdwwwwddddddddwwwwwwwwdddwwwwwwwwwwwdwwwwwwwwww\n"
+                + "wwwwwwwwwwwddddddddddddddddwwwwwddwwwwwwwwdddddddddddddddwwwwwwwwww\n"
+                + "wwwwwwwwwwwddddddddddddddddwwwwwddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n"
+                + "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n";
+
+
+        String complex = "[msg;The Game, I am testing-nThe splitting -nof-nstrings.;50]\n"
+                + "[tw;1500;0]\n"
+                + "[tw;1500;0]\n"
+                + "[tw;1500;0]\n"
+                + "[tw;1500;0]\n"
+                + "[tw;1500;0]\n"
+                + "[tw;1500;0]";
+
+        // @formatter:on
 
         script1 = new MessageEntity(game, null, null, null, 100, 100, -1, -1, 50, "You must wait :)");
 
         this.levelInteractiveObjects.add(new TerminalEntity(game, null, null, null, 100, 100, "BetaLevel"));
 
-        message1 = new MessagePopupEntity(game, 50, "Testing out a possible " + "text that will-ndisplay itself in specific events,-nexcelent plot element.", null);
+        message1 = new MessagePopupEntity(game, 50, "Testing out a possible text that will-ndisplay itself in specific events,-nexcelent plot element.", null);
 
-        message2 = new MessagePopupEntity(game, 50, "What's this? Another text box?-n" + "And it works fine! Cosmos for the-nwin!!!", null);
+        message2 = new MessagePopupEntity(game, 50, "What's this? Another text box?-nAnd it works fine! Cosmos for the-nwin!!!", null);
+
 
         this.levelConstantObjects.add(message1);
         this.levelConstantObjects.add(message2);
@@ -46,8 +93,9 @@ public class AlphaLevel extends LevelLoader {
         loadLevel(complex);
     }
 
+    @Override
     public void act(String source) {
-        if (CosmosConstants.debug)
+        if (CosmosConstants.DEBUG)
             System.out.println("Entity: " + source + " - is trigerring an event.");
 
         if (source.equals("testmessage"))
@@ -56,6 +104,7 @@ public class AlphaLevel extends LevelLoader {
             message2.setAlive(true); // act out event
     }
 
+    @Override
     public void onLoad(Graphics g) {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, CosmosConstants.WIDTH, CosmosConstants.HEIGHT);
@@ -68,7 +117,7 @@ public class AlphaLevel extends LevelLoader {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public Object clone() {
         return new AlphaLevel(game);
     }
 

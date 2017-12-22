@@ -11,8 +11,7 @@ import java.util.Random;
  */
 public class EnemyEntity extends CosmosEntity {
 
-    int damageStep = 100;
-    int drawStep = 0;
+    private int damageStep = 100;
 
     public EnemyEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, int width, int height, long millis) {
         super(game, folder, ref, onDeath, x, y, width, height, millis);
@@ -29,7 +28,6 @@ public class EnemyEntity extends CosmosEntity {
         } else {
             damageStep = 100;
         }
-
     }
 
     @Override

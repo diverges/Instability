@@ -23,29 +23,29 @@ import java.util.ArrayList;
  * and the inventory.
  */
 public class PlayerEntity extends CosmosEntity implements Killable, Clickable, KeyListener {
-    public static final int MAXARMOR = 75;
+    private static final int MAXARMOR = 75;
     private int armor = 75; // specific health of the player, counter to game
     private Inventory inventory;
     // over screen
 
     private boolean moving = false;
-    private ArrayList<WallEntity> collidingWithDown = new ArrayList<WallEntity>();
-    private ArrayList<WallEntity> collidingWithLeft = new ArrayList<WallEntity>();
-    private ArrayList<WallEntity> collidingWithRight = new ArrayList<WallEntity>();
-    private ArrayList<WallEntity> collidingWithUp = new ArrayList<WallEntity>();
+    private ArrayList<WallEntity> collidingWithDown = new ArrayList<>();
+    private ArrayList<WallEntity> collidingWithLeft = new ArrayList<>();
+    private ArrayList<WallEntity> collidingWithRight = new ArrayList<>();
+    private ArrayList<WallEntity> collidingWithUp = new ArrayList<>();
     // move to
 
     // DAMAGE
-    int dealtDamage = -1;
+    private int dealtDamage = -1;
 
     // DAMAGE on other objects
-    int damagePower = 10; // determines default damage player deals on other
+    private int damagePower = 10; // determines default damage player deals on other
     // objects
     public double distance = -1; // The closest distance to an entity block.
     public BlockEntity block = null; // not null if we need to attack this
     // block.
 
-    int drawStep = 0;
+    private int drawStep = 0;
 
     // confirm player movement
     private boolean isMovingRight = false;
@@ -62,14 +62,21 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
     /**
      * Sprite constructor
      *
+     * @param game
+     * @param folder
      * @param ref
+     * @param onDeath
      * @param x
      * @param y
+     * @param width
+     * @param height
+     * @param millis
+     * @param speed
      */
     public PlayerEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, int width, int height, long millis, int speed) {
         super(game, folder, ref, onDeath, x, y, width, height, millis);
-        Dx = speed;
-        Dy = speed;
+        dX = speed;
+        dY = speed;
         inventory = new Inventory(game);
     }
 
@@ -104,7 +111,7 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
 
     }
 
-    public void resetPlayer() {
+    private void resetPlayer() {
         isMovingUp = false;
         isMovingDown = false;
         isMovingLeft = false;
@@ -181,13 +188,12 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
         return collidingWithUp;
     }
 
+    @Override
     public boolean checkIfAlive() {
-        if (armor <= 0)
-            return false;
-        else
-            return true;
+        return armor > 0;
     }
 
+    @Override
     public void onDeath() {
         // TODO: Animate player death. For now let's use a sleep to
         // produce the feeling of animation.
@@ -202,6 +208,7 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
 
     }
 
+    @Override
     public int dealDamage(int damage) {
         // subtract damage from armor
         if (armor - damage <= 0) {
@@ -221,13 +228,13 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
     }
 
     public void restore(int amount) {
-        int armor_lost = MAXARMOR - armor;
-        if (amount >= armor_lost)
-            amount = armor_lost;
+        int armorLost = MAXARMOR - armor;
+        if (amount >= armorLost)
+            amount = armorLost;
         this.armor += amount;
     }
 
-    public void revive(int armor) {
+    private void revive(int armor) {
         resetPlayer();
         this.armor = armor;
     }
@@ -236,6 +243,7 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
      * Load player interface.
      */
 
+    @Override
     public void draw(Graphics g) {
         super.draw(g);
 
@@ -264,13 +272,16 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
 
     }
 
-    public void mouseDragged(MouseEvent e) {
+    @Override
+    public void mouseDragged(MouseEvent event) {
     }
 
-    public void mouseReleased(MouseEvent e) {
+    @Override
+    public void mouseReleased(MouseEvent event) {
     }
 
-    public void mousePressed(final MouseEvent e) {
+    @Override
+    public void mousePressed(final MouseEvent event) {
     }
 
     public int getDamagePower() {
@@ -281,13 +292,16 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
         this.damagePower = damagePower;
     }
 
-    public void mouseEntered(MouseEvent e) {
+    @Override
+    public void mouseEntered(MouseEvent event) {
     }
 
-    public void mouseExited(MouseEvent e) {
+    @Override
+    public void mouseExited(MouseEvent event) {
     }
 
-    public void mouseMoved(MouseEvent e) {
+    @Override
+    public void mouseMoved(MouseEvent event) {
     }
 
     @Override
@@ -309,7 +323,7 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
                 isMovingLeft = true;
                 moving = true;
             }
-            me.setBounds((int) me.x, (int) me.y, (int) me.width, (int) me.height);
+            me.setBounds(me.x, me.y, me.width, me.height);
         }
 
     }
@@ -318,19 +332,23 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
     public void keyReleased(KeyEvent e) {
         if (enteredCheatMode) {
             cheat += e.getKeyChar();
-            if (cheat.equals(CosmosConstants.LEVEL_SCREEN)) {
-                game.menu = new MenuLevelSelect(game);
-                game.unpause();
-                enteredCheatMode = false;
-            } else if (cheat.equals(CosmosConstants.GOD_MODE)) {
-                armor = MAXARMOR * 500;
-                damagePower = 100;
-                game.unpause();
-                enteredCheatMode = false;
-            } else if (cheat.equals(CosmosConstants.NO_CLIP)) {
-                game.noclip = !game.noclip;
-                game.unpause();
-                enteredCheatMode = false;
+            switch (cheat) {
+                case CosmosConstants.LEVEL_SCREEN:
+                    game.menu = new MenuLevelSelect(game);
+                    game.unpause();
+                    enteredCheatMode = false;
+                    break;
+                case CosmosConstants.GOD_MODE:
+                    armor = MAXARMOR * 500;
+                    damagePower = 100;
+                    game.unpause();
+                    enteredCheatMode = false;
+                    break;
+                case CosmosConstants.NO_CLIP:
+                    game.noclip = !game.noclip;
+                    game.unpause();
+                    enteredCheatMode = false;
+                    break;
             }
             if (!enteredCheatMode)
                 System.out.println("Cheat entered: " + cheat);
@@ -367,11 +385,11 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
                 game.pause();
         } else if (e.getKeyChar() == 'i' && !enteredCheatMode) {
             if (inventory.isDisplay()) {
-                if (inventory.hide())
-                    game.unpause();
+                inventory.hide();
+                game.unpause();
             } else {
-                if (inventory.show())
-                    game.pause();
+                inventory.show();
+                game.pause();
             }
         }
 
@@ -412,7 +430,7 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent event) {
 
     }
 }

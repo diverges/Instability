@@ -15,38 +15,31 @@ import java.util.List;
 /**
  * Level select menu for testing purposes only. (Will not be visible to normal user.)
  */
-@SuppressWarnings({
-        "deprecation", "rawtypes", "unchecked"
-})
 public class MenuLevelSelect extends Menu {
-    List<Class> classes = null;
+    private List<Class> classes;
 
     public MenuLevelSelect(GameCanvas game) {
         super(game);
 
-        int grid_x = 25;
-        int grid_y = 50;
+        int gridX = 25;
+        int gridY = 50;
 
-		/*
+        /*
          * Load each individual level
-		 */
+         */
         int rowCount = 0;
         classes = Reflection.LEVELS;
         if (classes != null)
-            for (int i = 0; i < classes.size(); i++) {
-                if (!classes.get(i).getPackage().getName().contains("menu")) {
-                    levelTextureObjects.add(new ButtonEntity(game, classes.get(i).getName(), null, null, null, grid_x, grid_y, 100, 75, classes.get(i)
-                                                                                                                                               .getName()
-                                                                                                                                               .replace(classes.get(i)
-                                                                                                                                                               .getPackage()
-                                                                                                                                                               .getName() + ".", "")));
-                    grid_x += 150;
+            for (Class aClass : classes) {
+                if (!aClass.getPackage().getName().contains("menu")) {
+                    levelTextureObjects.add(new ButtonEntity(game, aClass.getName(), null, null, null, gridX, gridY, 100, 75, aClass.getName().replace(aClass.getPackage().getName() + ".", "")));
+                    gridX += 150;
                     rowCount++;
 
                     // only 5 level boxes per row
                     if (rowCount == 5) {
-                        grid_y += 100;
-                        grid_x = 25;
+                        gridY += 100;
+                        gridX = 25;
                         rowCount = 0;
                     }
                 }
@@ -56,50 +49,36 @@ public class MenuLevelSelect extends Menu {
     public void onLoad(Graphics g) {
     }
 
-    public void mouseReleased(MouseEvent e) {
-        super.mouseReleased(e);
-        try {
-            for (CosmosEntity b : levelTextureObjects) {
-                if (b instanceof ButtonEntity) {
-                    if (((ButtonEntity) b).isInButton(e.getPoint())) {
-                        for (Class c : classes) {
-                            if (((ButtonEntity) b).getRef().equals(c.getName())) {
-                                try {
-                                    Class partypes[] = new Class[1];
-                                    partypes[0] = GameCanvas.class;
-                                    Constructor ct = c.getConstructor(partypes);
-                                    Object arglist[] = new Object[1];
-                                    arglist[0] = game;
-                                    Object retobj = ct.newInstance(arglist);
-                                    game.startLevel((LevelLoader) ((LevelLoader) retobj).clone());
-                                } catch (CloneNotSupportedException e1) {
-                                    e1.printStackTrace();
-                                } catch (IllegalArgumentException e2) {
-
-                                    e2.printStackTrace();
-                                } catch (InstantiationException e3) {
-                                    e3.printStackTrace();
-                                } catch (IllegalAccessException e4) {
-                                    e4.printStackTrace();
-                                } catch (InvocationTargetException e5) {
-                                    e5.printStackTrace();
-                                } catch (SecurityException e6) {
-                                    e6.printStackTrace();
-                                } catch (NoSuchMethodException e7) {
-                                    e7.printStackTrace();
-                                }
-                                break;
+    @Override
+    @SuppressWarnings("unchecked")
+    public void mouseReleased(MouseEvent event) {
+        super.mouseReleased(event);
+        for (CosmosEntity b : levelTextureObjects) {
+            if (b instanceof ButtonEntity) {
+                if (((ButtonEntity) b).isInButton(event.getPoint())) {
+                    for (Class c : classes) {
+                        if (((ButtonEntity) b).getRef().equals(c.getName())) {
+                            try {
+                                Class partypes[] = new Class[1];
+                                partypes[0] = GameCanvas.class;
+                                Constructor ct = c.getConstructor(partypes);
+                                Object arglist[] = new Object[1];
+                                arglist[0] = game;
+                                Object retobj = ct.newInstance(arglist);
+                                game.startLevel((LevelLoader) ((LevelLoader) retobj).clone());
+                            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                                e.printStackTrace();
                             }
+                            break;
                         }
                     }
                 }
             }
-        } catch (Exception ex) {
         }
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent event) {
 
     }
 }

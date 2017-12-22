@@ -1,6 +1,7 @@
 package com.cosmosengine;
 
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 /**
  * This class provides a frame for the canvas to go into.
@@ -12,7 +13,7 @@ public class GameFrame {
         frame.setIgnoreRepaint(true);
         //frame.setUndecorated(true);
         frame.setBounds(0, 0, CosmosConstants.WIDTH, CosmosConstants.HEIGHT);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setResizable(false);
         GameCanvas game = new GameCanvas();
         frame.add(game);

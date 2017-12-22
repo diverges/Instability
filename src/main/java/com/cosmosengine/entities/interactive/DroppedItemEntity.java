@@ -13,9 +13,9 @@ import java.awt.Graphics2D;
  * Dropped Items are generated when a player drops an item from inventory, or a block drops it when destroyed. It is made slightly transparent to see blocks under it.
  */
 public class DroppedItemEntity extends CosmosEntity {
-    private Item onPickup = null;
-    private int quantity = 0;
-    private boolean justDropped = true;
+    private Item onPickup;
+    private int quantity;
+    private boolean justDropped;
 
     /**
      * @param game
@@ -50,7 +50,7 @@ public class DroppedItemEntity extends CosmosEntity {
 
     }
 
-    public void onPickUp() {
+    private void onPickUp() {
         this.isAlive = !game.player.getInventory().add(onPickup, quantity);
     }
 

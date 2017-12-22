@@ -10,7 +10,7 @@ import java.awt.Graphics;
  */
 public class TimedWallEntity extends WallEntity {
 
-    int timeCount = 0; // ON and OFF timer
+    private int timeCount = 0; // ON and OFF timer
 
     /**
      * @param millis      - specific ON and OFF time.
@@ -45,10 +45,11 @@ public class TimedWallEntity extends WallEntity {
         }
     }
 
+    @Override
     public void draw(Graphics g) {
         g.setColor(Color.BLUE);
         if (!dying)
-            g.drawRect((int) me.x, (int) me.y, (int) me.width, (int) me.height);
+            g.drawRect(me.x, me.y, me.width, me.height);
 
     }
 

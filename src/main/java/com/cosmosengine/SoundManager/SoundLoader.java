@@ -8,16 +8,16 @@ import java.net.URL;
 import java.util.HashMap;
 
 /**
- * The loader class for retrieving cached sounds. Will add the sound to the cache if it is not already there.
+ * The loader class for retrieving cached SOUNDS. Will add the sound to the cache if it is not already there.
  */
 public class SoundLoader {
-    private static SoundLoader single = new SoundLoader();
+    private static SoundLoader INSTANCE = new SoundLoader();
 
     public static SoundLoader get() {
-        return single;
+        return INSTANCE;
     }
 
-    private HashMap<String, CosmosSound> sounds = new HashMap<String, CosmosSound>();
+    private HashMap<String, CosmosSound> sounds = new HashMap<>();
 
     public CosmosSound getSound(String ref) {
         if (sounds.get(ref) != null)

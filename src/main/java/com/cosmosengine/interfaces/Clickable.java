@@ -7,18 +7,18 @@ import java.awt.event.MouseEvent;
  */
 public interface Clickable {
 
-    void mousePressed(MouseEvent e);
+    void mousePressed(MouseEvent event);
 
-    void mouseReleased(MouseEvent e);
+    void mouseReleased(MouseEvent event);
 
-    void mouseEntered(MouseEvent e);
+    void mouseEntered(MouseEvent event);
 
-    void mouseExited(MouseEvent e);
+    void mouseExited(MouseEvent event);
 
-    void mouseDragged(MouseEvent e);
+    void mouseDragged(MouseEvent event);
 
-    void mouseMoved(MouseEvent e);
+    void mouseMoved(MouseEvent event);
 
-    void mouseClicked(MouseEvent e);
+    void mouseClicked(MouseEvent event);
 
 }

@@ -21,7 +21,7 @@ import java.util.HashMap;
 public class Inventory implements Clickable {
 
     private boolean display = false;
-    private HashMap<Integer, ItemSlot> itemSlots = new HashMap<Integer, ItemSlot>();
+    private HashMap<Integer, ItemSlot> itemSlots = new HashMap<>();
     private Point itemNamePoint = null;
     private String onItemName = null;
     private String error = null;
@@ -29,22 +29,22 @@ public class Inventory implements Clickable {
     private GameCanvas game;
 
     public Inventory(GameCanvas game) {
-        int grid_x = CosmosConstants.WIDTH / 6 + 10;
-        int grid_y = 125;
+        int gridX = CosmosConstants.WIDTH / 6 + 10;
+        int gridY = 125;
         int rowCount = 0;
         this.game = game;
-        cS1 = new ItemSlot((int) (grid_x + 100), 50, 99);
-        cS2 = new ItemSlot((int) (grid_x + 170), 50, 99);
-        pS = new ItemSlot((int) (grid_x + 250), 50, 99);
+        cS1 = new ItemSlot(gridX + 100, 50, 99);
+        cS2 = new ItemSlot(gridX + 170, 50, 99);
+        pS = new ItemSlot(gridX + 250, 50, 99);
         for (int i = 0; i <= 59; i++) {
-            itemSlots.put(i, new ItemSlot(grid_x, grid_y, ItemSlot.DEFAULT_MAX));
-            grid_x += 45;
+            itemSlots.put(i, new ItemSlot(gridX, gridY, ItemSlot.DEFAULT_MAX));
+            gridX += 45;
             rowCount++;
 
             // only 5 level boxes per row
             if (rowCount == 12) {
-                grid_y += 45;
-                grid_x = CosmosConstants.WIDTH / 6 + 10;
+                gridY += 45;
+                gridX = CosmosConstants.WIDTH / 6 + 10;
                 rowCount = 0;
             }
         }
@@ -126,19 +126,19 @@ public class Inventory implements Clickable {
      */
     public void resetInv(HashMap<Integer, ItemSlot> slots) {
         if (slots == null) {
-            int grid_x = CosmosConstants.WIDTH / 6 + 10;
-            int grid_y = 125;
+            int gridX = CosmosConstants.WIDTH / 6 + 10;
+            int gridY = 125;
             int rowCount = 0;
-            itemSlots = new HashMap<Integer, ItemSlot>();
+            itemSlots = new HashMap<>();
             for (int i = 0; i <= 59; i++) {
-                itemSlots.put(i, new ItemSlot(grid_x, grid_y, ItemSlot.DEFAULT_MAX));
-                grid_x += 45;
+                itemSlots.put(i, new ItemSlot(gridX, gridY, ItemSlot.DEFAULT_MAX));
+                gridX += 45;
                 rowCount++;
 
                 // only 5 level boxes per row
                 if (rowCount == 12) {
-                    grid_y += 45;
-                    grid_x = CosmosConstants.WIDTH / 6 + 10;
+                    gridY += 45;
+                    gridX = CosmosConstants.WIDTH / 6 + 10;
                     rowCount = 0;
                 }
             }
@@ -172,7 +172,7 @@ public class Inventory implements Clickable {
 
     }
 
-    public boolean hide() {
+    public void hide() {
         if (cS1.getQuantity() > 0 || cS2.getQuantity() > 0) {
             if (cS1.getItem() != null) {
                 game.level.getLevelInteractiveObjects()
@@ -190,25 +190,24 @@ public class Inventory implements Clickable {
         this.error = null;
         this.itemNamePoint = null;
         this.onItemName = null;
-        return true;
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(MouseEvent event) {
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-        this.mouseClicked(e);
+    public void mouseReleased(MouseEvent event) {
+        this.mouseClicked(event);
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(MouseEvent event) {
         boolean onItem = false;
         for (int i = 0; i < itemSlots.size(); i++) {
             if (!itemSlots.get(i).isEmpty()) {
-                if (itemSlots.get(i).getBounds().contains(e.getPoint())) {
-                    itemNamePoint = e.getPoint();
+                if (itemSlots.get(i).getBounds().contains(event.getPoint())) {
+                    itemNamePoint = event.getPoint();
                     onItemName = itemSlots.get(i).getItem().getName();
                     onItem = true;
                     break;
@@ -217,22 +216,22 @@ public class Inventory implements Clickable {
         }
         if (!onItem) {
             if (!cS1.isEmpty()) {
-                if (cS1.getBounds().contains(e.getPoint())) {
-                    itemNamePoint = e.getPoint();
+                if (cS1.getBounds().contains(event.getPoint())) {
+                    itemNamePoint = event.getPoint();
                     onItemName = cS1.getItem().getName();
                     onItem = true;
                 }
             }
             if (!cS2.isEmpty()) {
-                if (cS2.getBounds().contains(e.getPoint())) {
-                    itemNamePoint = e.getPoint();
+                if (cS2.getBounds().contains(event.getPoint())) {
+                    itemNamePoint = event.getPoint();
                     onItemName = cS2.getItem().getName();
                     onItem = true;
                 }
             }
             if (!pS.isEmpty()) {
-                if (pS.getBounds().contains(e.getPoint())) {
-                    itemNamePoint = e.getPoint();
+                if (pS.getBounds().contains(event.getPoint())) {
+                    itemNamePoint = event.getPoint();
                     onItemName = pS.getItem().getName();
                     onItem = true;
                 }
@@ -246,11 +245,11 @@ public class Inventory implements Clickable {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3) {
+    public void mouseClicked(MouseEvent event) {
+        if (event.getButton() == MouseEvent.BUTTON3) {
             for (int i = 0; i < this.itemSlots.size(); i++) {
                 ItemSlot slot = itemSlots.get(i);
-                if (slot.getBounds().contains(e.getPoint())) {
+                if (slot.getBounds().contains(event.getPoint())) {
                     if (slot.getItem() != null) {
                         game.level.getLevelInteractiveObjects()
                                   .add(new DroppedItemEntity(game, null, slot.getItem().getRef(), null, (int) game.player.getX(), (int) game.player.getY(), 40, 40, -1, slot.getItem(), 1, true));
@@ -262,7 +261,7 @@ public class Inventory implements Clickable {
         } else {
             for (int i = 0; i < this.itemSlots.size(); i++) {
                 ItemSlot slot = itemSlots.get(i);
-                if (slot.getBounds().contains(e.getPoint())) {
+                if (slot.getBounds().contains(event.getPoint())) {
                     if (!slot.isEmpty()) {
                         if (cS1.getItem() == null || (cS1.getItem() != null && cS1.getItem().getName().equals(slot.getItem().getName()))) {
                             cS1.add(slot.getItem(), 1);
@@ -278,21 +277,21 @@ public class Inventory implements Clickable {
                     }
                 }
             }
-            if (cS1.getBounds().contains(e.getPoint())) {
+            if (cS1.getBounds().contains(event.getPoint())) {
                 if (!cS1.isEmpty()) {
                     add(cS1.getItem(), cS1.getQuantity());
                     cS1.remove(cS1.getQuantity());
                     if (pS.getItem() != null)
                         pS.remove(pS.getQuantity());
                 }
-            } else if (cS2.getBounds().contains(e.getPoint())) {
+            } else if (cS2.getBounds().contains(event.getPoint())) {
                 if (!cS2.isEmpty()) {
                     add(cS2.getItem(), cS2.getQuantity());
                     cS2.remove(cS2.getQuantity());
                     if (pS.getItem() != null)
                         pS.remove(pS.getQuantity());
                 }
-            } else if (pS.getBounds().contains(e.getPoint())) {
+            } else if (pS.getBounds().contains(event.getPoint())) {
                 if (!pS.isEmpty()) {
                     if (add(pS.getItem(), pS.getQuantity())) {
                         cS2.remove(cS2.getQuantity());
@@ -305,17 +304,17 @@ public class Inventory implements Clickable {
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(MouseEvent event) {
 
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(MouseEvent event) {
 
     }
 
     @Override
-    public void mouseDragged(MouseEvent e) {
+    public void mouseDragged(MouseEvent event) {
 
     }
 
@@ -323,9 +322,8 @@ public class Inventory implements Clickable {
         return display;
     }
 
-    public boolean show() {
+    public void show() {
         display = true;
-        return this.display;
     }
 
     public HashMap<Integer, ItemSlot> getItemSlots() {

@@ -17,14 +17,15 @@ public abstract class CosmosEntity {
 
     // defines if the objects has a right to exist, act, collide, or side scroll
     protected boolean isAlive = true;
-    protected double Dy, Dx;
+    protected double dY;
+    protected double dX;
 
     // Sprite components
     protected CosmosSprite[] sprites;
     protected CosmosSprite[] onDeathSprites;
     private int current = 0;
     protected long millis;
-    protected int stepsNeeded = 0;
+    protected int stepsNeeded;
     protected int step = 0;
 
     protected Rectangle me = new Rectangle(); // self image of player
@@ -42,15 +43,14 @@ public abstract class CosmosEntity {
      * @param height  of the object
      * @param millis  on to use when animating. -1 for no constant animation.
      */
-    public CosmosEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, int width, int height, long millis) {
-        String[] imgs = null;
-        String sub = folder;
+    protected CosmosEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, int width, int height, long millis) {
+        String[] imgs;
         this.game = game;
         if (ref != null) {
             imgs = ref.split(";");
             this.sprites = new CosmosSprite[imgs.length];
             for (int i = 0; i < imgs.length; i++) {
-                if (sub != null) {
+                if (folder != null) {
                     sprites[i] = ImageLoader.get().getSprite(folder + "/" + imgs[i]);
                 } else {
                     sprites[i] = ImageLoader.get().getSprite(imgs[i]);
@@ -61,7 +61,7 @@ public abstract class CosmosEntity {
             imgs = onDeath.split(";");
             this.onDeathSprites = new CosmosSprite[imgs.length];
             for (int i = 0; i < imgs.length; i++) {
-                if (sub != null) {
+                if (folder != null) {
                     onDeathSprites[i] = ImageLoader.get().getSprite(folder + "/death/" + imgs[i]);
                 } else {
                     onDeathSprites[i] = ImageLoader.get().getSprite(imgs[i]);
@@ -69,7 +69,7 @@ public abstract class CosmosEntity {
             }
         }
         this.millis = millis;
-        stepsNeeded = (int) (millis / CosmosConstants.period);
+        stepsNeeded = (int) (millis / CosmosConstants.PERIOD);
         me.x = x;
         me.y = y;
         me.width = width;
@@ -88,14 +88,13 @@ public abstract class CosmosEntity {
      * @param millis  on to use when animating. -1 for no constant animation.
      */
     public CosmosEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, long millis) {
-        String[] imgs = null;
-        String sub = folder;
+        String[] imgs;
         this.game = game;
         if (ref != null) {
             imgs = ref.split(";");
             this.sprites = new CosmosSprite[imgs.length];
             for (int i = 0; i < imgs.length; i++) {
-                if (sub != null) {
+                if (folder != null) {
                     sprites[i] = ImageLoader.get().getSprite(folder + "/" + imgs[i]);
                 } else {
                     sprites[i] = ImageLoader.get().getSprite(imgs[i]);
@@ -106,7 +105,7 @@ public abstract class CosmosEntity {
             imgs = onDeath.split(";");
             this.onDeathSprites = new CosmosSprite[imgs.length];
             for (int i = 0; i < imgs.length; i++) {
-                if (sub != null) {
+                if (folder != null) {
                     onDeathSprites[i] = ImageLoader.get().getSprite(folder + "/death/" + imgs[i]);
                 } else {
                     onDeathSprites[i] = ImageLoader.get().getSprite(imgs[i]);
@@ -118,7 +117,7 @@ public abstract class CosmosEntity {
             me.height = sprites[0].getHeight();
         }
         this.millis = millis;
-        stepsNeeded = (int) (millis / CosmosConstants.period);
+        stepsNeeded = (int) (millis / CosmosConstants.PERIOD);
         me.x = x;
         me.y = y;
     }
@@ -132,7 +131,7 @@ public abstract class CosmosEntity {
         if (sprites != null && sprites[getCurrent()] != null)
             return new Point((int) this.getX() + ((int) this.getWidth() / 2), (int) this.getY() + ((int) this.getHeight() / 2));
         else
-            return new Point((int) ((int) this.getX() + (me.width / 2)), (int) (this.getY() + (me.height / 2)));
+            return new Point((int) this.getX() + (me.width / 2), (int) this.getY() + (me.height / 2));
     }
 
     public boolean isAlive() {
@@ -189,11 +188,11 @@ public abstract class CosmosEntity {
 
     public void draw(Graphics g) {
         sprites[current].draw(g, me.x, me.y);
-        if (CosmosConstants.debug) {
+        if (CosmosConstants.DEBUG) {
             g.setColor(Color.WHITE);
             g.drawRect(me.x, me.y, me.width, me.height);
             g.setColor(Color.BLUE);
-            g.fillOval((int) (me.x + me.width / 2), (int) (me.y + me.height / 2), 3, 3);
+            g.fillOval(me.x + me.width / 2, me.y + me.height / 2, 3, 3);
         }
     }
 
@@ -205,7 +204,7 @@ public abstract class CosmosEntity {
         this.current = current;
     }
 
-    public int getCurrent() {
+    protected int getCurrent() {
         return current;
     }
 }

@@ -12,14 +12,6 @@ public class Combination {
     private int quantityNeeded1;
     private int quantityNeeded2;
 
-    /**
-     * @param blockName1
-     * @param blockName2
-     * @param itemMade
-     * @param quantityMade
-     * @param quantityNeeded1
-     * @param quantityNeeded2
-     */
     public Combination(String blockName1, String blockName2, Item itemMade, int quantityMade, int quantityNeeded1, int quantityNeeded2) {
         super();
         this.blockName1 = blockName1;

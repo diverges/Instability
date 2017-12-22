@@ -17,10 +17,10 @@ public class WallEntity extends CosmosEntity {
     boolean isBeingCollidedLeft = false;
     boolean isBeingCollidedUp = false;
     boolean isBeingCollidedDown = false;
-    Rectangle rightColl;
-    Rectangle leftColl;
-    Rectangle downColl;
-    Rectangle upColl;
+    private Rectangle rightColl;
+    private Rectangle leftColl;
+    private Rectangle downColl;
+    private Rectangle upColl;
     boolean dying = false;
 
     public WallEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, int width, int height, long millis) {
@@ -31,7 +31,7 @@ public class WallEntity extends CosmosEntity {
     public void draw(Graphics g) {
         if (this.sprites != null)
             super.draw(g);
-        if (CosmosConstants.debug) {
+        if (CosmosConstants.DEBUG) {
             g.setColor(Color.WHITE);
             if (this.rightColl != null && this.isBeingCollidedRight) {
                 g.drawRect(rightColl.x, rightColl.y, rightColl.width, rightColl.height);
@@ -47,7 +47,7 @@ public class WallEntity extends CosmosEntity {
             }
             if (this.downColl != null && this.isBeingCollidedDown) {
                 g.drawRect(downColl.x, downColl.y, downColl.width, downColl.height);
-                g.drawString(downColl.x + "," + downColl.y, downColl.x, downColl.y + (int) me.height);
+                g.drawString(downColl.x + "," + downColl.y, downColl.x, downColl.y + me.height);
             }
         }
     }
@@ -128,28 +128,28 @@ public class WallEntity extends CosmosEntity {
     private boolean checkRight() {
         if (!isAlive || dying)
             return false;
-        rightColl = new Rectangle((int) me.x - 4, (int) me.y, (int) this.getWidth(), (int) this.getHeight());
+        rightColl = new Rectangle(me.x - 4, me.y, (int) this.getWidth(), (int) this.getHeight());
         return game.player.getBounds().intersects(rightColl);
     }
 
     private boolean checkLeft() {
         if (!isAlive || dying)
             return false;
-        leftColl = new Rectangle((int) me.x, (int) me.y, (int) this.getWidth() + 4, (int) this.getHeight());
+        leftColl = new Rectangle(me.x, me.y, (int) this.getWidth() + 4, (int) this.getHeight());
         return game.player.getBounds().intersects(leftColl);
     }
 
     private boolean checkDown() {
         if (!isAlive || dying)
             return false;
-        downColl = new Rectangle((int) me.x, (int) me.y - 4, (int) this.getWidth(), (int) this.getHeight());
+        downColl = new Rectangle(me.x, me.y - 4, (int) this.getWidth(), (int) this.getHeight());
         return game.player.getBounds().intersects(downColl);
     }
 
     private boolean checkUp() {
         if (!isAlive || dying)
             return false;
-        upColl = new Rectangle((int) me.x, (int) me.y, (int) this.getWidth(), (int) this.getHeight() + 4);
+        upColl = new Rectangle(me.x, me.y, (int) this.getWidth(), (int) this.getHeight() + 4);
         return game.player.getBounds().intersects(upColl);
     }
 

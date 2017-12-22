@@ -12,7 +12,7 @@ public class Item {
     private CosmosSprite sprite;
     private String name;
     private String ref;
-    private boolean stackable = true;
+    private boolean stackable;
 
     public Item(String ref, String name, boolean stackable) {
         this.sprite = ImageLoader.get().getSprite(ref);

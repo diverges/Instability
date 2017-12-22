@@ -20,8 +20,9 @@ public class ButtonEntity extends CosmosEntity {
      *
      * @deprecated
      */
-    String msg = "";
-    String buttonRef;
+    @Deprecated
+    private String msg = "";
+    private String buttonRef;
 
     /**
      * Create a button without text
@@ -31,13 +32,13 @@ public class ButtonEntity extends CosmosEntity {
      * @param folder
      * @param ref
      * @param onDeath
-     * @param x_pos
-     * @param y_pos
+     * @param xPos
+     * @param yPos
      * @param width
      * @param height
      */
-    public ButtonEntity(GameCanvas game, String buttonRef, String folder, String ref, String onDeath, int x_pos, int y_pos, int width, int height) {
-        super(game, folder, ref, onDeath, x_pos, y_pos, width, height, -1);
+    public ButtonEntity(GameCanvas game, String buttonRef, String folder, String ref, String onDeath, int xPos, int yPos, int width, int height) {
+        super(game, folder, ref, onDeath, xPos, yPos, width, height, -1);
         this.buttonRef = buttonRef;
     }
 
@@ -48,16 +49,17 @@ public class ButtonEntity extends CosmosEntity {
      * @param buttonRef
      * @param folder
      * @param ref
-     * @param x_pos
-     * @param y_pos
+     * @param xPos
+     * @param yPos
      * @param width
      * @param height
      * @param msg
      *
      * @deprecated
      */
-    public ButtonEntity(GameCanvas game, String buttonRef, String folder, String ref, String onDeath, int x_pos, int y_pos, int width, int height, String msg) {
-        super(game, folder, ref, onDeath, x_pos, y_pos, width, height, -1);
+    @Deprecated
+    public ButtonEntity(GameCanvas game, String buttonRef, String folder, String ref, String onDeath, int xPos, int yPos, int width, int height, String msg) {
+        super(game, folder, ref, onDeath, xPos, yPos, width, height, -1);
         this.msg = msg;
         this.buttonRef = buttonRef;
         if (ref != null) {
@@ -85,19 +87,19 @@ public class ButtonEntity extends CosmosEntity {
     public void draw(Graphics g) {
         Color c = g.getColor();
         if (this.sprites != null)
-            this.sprites[getCurrent()].draw(g, (int) me.x, (int) me.y);
+            this.sprites[getCurrent()].draw(g, me.x, me.y);
         else {
             if (getCurrent() == 0) {
                 g.setColor(Color.LIGHT_GRAY);
-                g.fill3DRect((int) me.x, (int) me.y, (int) me.width, (int) me.height, true);
+                g.fill3DRect(me.x, me.y, me.width, me.height, true);
                 g.setColor(Color.BLACK);
-                g.drawString(msg, (int) me.x + 10, (int) (me.y + me.height / 2 + 3));
+                g.drawString(msg, me.x + 10, (me.y + me.height / 2) + 3);
                 g.setColor(c);
             } else {
                 g.setColor(Color.LIGHT_GRAY);
-                g.fill3DRect((int) me.x, (int) me.y, (int) me.width, (int) me.height, false);
+                g.fill3DRect(me.x, me.y, me.width, me.height, false);
                 g.setColor(Color.BLACK);
-                g.drawString(msg, (int) me.x + 10, (int) (me.y + me.height / 2 + 5));
+                g.drawString(msg, me.x + 10, (me.y + me.height / 2) + 5);
                 g.setColor(c);
             }
         }

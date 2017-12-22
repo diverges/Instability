@@ -20,9 +20,41 @@ public class Credits extends LevelLoader {
     public Credits(GameCanvas game) {
         super(game);
         this.name = "Credits";
-        bg_sound = SoundLoader.get().getSound("menu/credits.wav");
+        backgroundSound = SoundLoader.get().getSound("menu/credits.wav");
         // load level
-        level = "::::::::::::::::::wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n" + "::::::::::::::::::wS:::::::HHAAHAMANREUGddddCddddddsddw\n" + "::::::::::::::::::w::::::::dddEdddddddddddddgddHddddUdw\n" + "::::::::::::::::::wdddddddddddddddddddEdddgdddddNdGdddw\n" + "::::::::::::::::::wdddgddddgddgddddRddddddHddddddddddAw\n" + "::::::::::::::::::wdGdddndddddHddddddddUdddUddNdddddddw\n" + "::::::::::::::::::wddddddnddgddddddRddnddddddddddUddddw\n" + "::::::::::::::::::wddgddgddddddgddddddGdddMddAddddndRdw\n" + "::::::::::::::::::wdddddddddsddddddgddddddddddddddddddw\n" + "::::::::::::::::::wdgdddgddddddnddsddddEdddddUddddddddw\n" + "::::::::::::::::::wdddddddddddddddddddddddRdddddMdddddw\n" + "::::::::::::::::::wdddddddddddddddddddEdddgdddddNdGdddw\n" + "::::::::::::::::::wdddgddddgddgddddRddddddHddddddddddAw\n" + "::::::::::::::::::wdGdddndddddHddddddddUdddUddNdddddddw\n" + "::::::::::::::::::wddddddnddgddddddRddnddddddddddUddddw\n" + "::::::::::::::::::wddgddgddddddgddddddGdddMddAddddndRdw\n" + "::::::::::::::::::wdddddddddsddddddgddddddddddddddddddw\n" + "::::::::::::::::::wdgdddgddddddnddsddddEdddddUddddddddw\n" + "::::::::::::::::::wdddddddddddddddddddddddRdddddMdddddw\n" + "::::::::::::::::::wdddddddddddddddddddEdddgdddddNdGdddw\n" + "::::::::::::::::::wdddgddddgddgddddRddddddHddddddddddAw\n" + "::::::::::::::::::wdGdddndddddHddddddddUdddUddNdddddddw\n" + "::::::::::::::::::wddddddnddgddddddRddnddddddddddUddddw\n" + "::::::::::::::::::wddgddgddddddgddddddGdddMddAddddndRdw\n" + "::::::::::::::::::wdddddddddsddddddgddddddddddddddddddw\n" + "::::::::::::::::::wdgdddgddddddnddsddddEdddddUddddddddw\n" + "::::::::::::::::::wdddddddddddddddddddddddRdddddMdddddw\n" + "::::::::::::::::::wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n";
+        // @formatter:off
+
+        level = ""
+                + "::::::::::::::::::wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n"
+                + "::::::::::::::::::wS:::::::HHAAHAMANREUGddddCddddddsddw\n"
+                + "::::::::::::::::::w::::::::dddEdddddddddddddgddHddddUdw\n"
+                + "::::::::::::::::::wdddddddddddddddddddEdddgdddddNdGdddw\n"
+                + "::::::::::::::::::wdddgddddgddgddddRddddddHddddddddddAw\n"
+                + "::::::::::::::::::wdGdddndddddHddddddddUdddUddNdddddddw\n"
+                + "::::::::::::::::::wddddddnddgddddddRddnddddddddddUddddw\n"
+                + "::::::::::::::::::wddgddgddddddgddddddGdddMddAddddndRdw\n"
+                + "::::::::::::::::::wdddddddddsddddddgddddddddddddddddddw\n"
+                + "::::::::::::::::::wdgdddgddddddnddsddddEdddddUddddddddw\n"
+                + "::::::::::::::::::wdddddddddddddddddddddddRdddddMdddddw\n"
+                + "::::::::::::::::::wdddddddddddddddddddEdddgdddddNdGdddw\n"
+                + "::::::::::::::::::wdddgddddgddgddddRddddddHddddddddddAw\n"
+                + "::::::::::::::::::wdGdddndddddHddddddddUdddUddNdddddddw\n"
+                + "::::::::::::::::::wddddddnddgddddddRddnddddddddddUddddw\n"
+                + "::::::::::::::::::wddgddgddddddgddddddGdddMddAddddndRdw\n"
+                + "::::::::::::::::::wdddddddddsddddddgddddddddddddddddddw\n"
+                + "::::::::::::::::::wdgdddgddddddnddsddddEdddddUddddddddw\n"
+                + "::::::::::::::::::wdddddddddddddddddddddddRdddddMdddddw\n"
+                + "::::::::::::::::::wdddddddddddddddddddEdddgdddddNdGdddw\n"
+                + "::::::::::::::::::wdddgddddgddgddddRddddddHddddddddddAw\n"
+                + "::::::::::::::::::wdGdddndddddHddddddddUdddUddNdddddddw\n"
+                + "::::::::::::::::::wddddddnddgddddddRddnddddddddddUddddw\n"
+                + "::::::::::::::::::wddgddgddddddgddddddGdddMddAddddndRdw\n"
+                + "::::::::::::::::::wdddddddddsddddddgddddddddddddddddddw\n"
+                + "::::::::::::::::::wdgdddgddddddnddsddddEdddddUddddddddw\n"
+                + "::::::::::::::::::wdddddddddddddddddddddddRdddddMdddddw\n"
+                + "::::::::::::::::::wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n";
+
+       // @formatter:on
 
         // load background image
         background = ImageLoader.get().getSprite("credits.png");
@@ -35,9 +67,10 @@ public class Credits extends LevelLoader {
         game.setObjective("Congratulations you beat InSTaBILiTi!");
     }
 
+    @Override
     public void onLoad(Graphics g) {
-        if (bg_sound != null && !bg_sound.isPlaying()) {
-            bg_sound.playSound();
+        if (backgroundSound != null && !backgroundSound.isPlaying()) {
+            backgroundSound.playSound();
         }
         // load loading screen
         g.setColor(Color.BLACK);
@@ -49,7 +82,7 @@ public class Credits extends LevelLoader {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public Object clone() {
         return new Credits(game);
     }
 

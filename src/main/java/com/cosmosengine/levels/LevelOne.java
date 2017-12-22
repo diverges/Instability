@@ -15,22 +15,126 @@ import java.awt.Graphics;
 
 public class LevelOne extends LevelLoader {
 
-    MessagePopupEntity startScript, digScript, hydrogenScript, gasScript, waterScript, powerUpScript, hclScript, afterDigScript, defenseIntroScript, co2Script, carboScript, finalScript;
-    CosmosSprite loadImage;
-    MessageEntity script1;
-    private boolean playing, bgPlay;
-    CosmosSound sound;
+    private MessagePopupEntity startScript;
+    private MessagePopupEntity digScript;
+    private MessagePopupEntity hydrogenScript;
+    private MessagePopupEntity gasScript;
+    private MessagePopupEntity waterScript;
+    private MessagePopupEntity powerUpScript;
+    private MessagePopupEntity hclScript;
+    private MessagePopupEntity afterDigScript;
+    private MessagePopupEntity defenseIntroScript;
+    private MessagePopupEntity co2Script;
+    private MessagePopupEntity carboScript;
+    private MessagePopupEntity finalScript;
+    private CosmosSprite loadImage;
+    private MessageEntity script1;
+    private boolean playing;
+    private boolean bgPlay;
+    private CosmosSound sound;
 
     public LevelOne(GameCanvas game) {
         super(game);
         this.name = "Outer Asteroid Shell";
 
-        bg_sound = SoundLoader.get().getSound("a_s1low.wav");
+        backgroundSound = SoundLoader.get().getSound("a_s1low.wav");
         sound = SoundLoader.get().getSound("plotStart.wav");
+        // @formatter:off
 
-        level = "::::::::::::::::::::::::::::ww:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n" + "::::XXXXXXXXXXXXXXXXXXXXXXXwww::::::::::::::::::::::::::::::::wwwwwww::::::::::::::::::::::::\n" + "::::X:::::::::::::::::::::wwwww:::::::::::::::::::::::wwwww:wwwwwdddwwwwwww::wwwwwwwww:::::::\n" + "::::X::::::::::::::::::::wwwwwww:::::::::::::::::::::dwwwwwww::dddHdddddwwwwwwwdddwwwwwwww:::\n" + "::::X:::::::::S:::::::::wwwdddwww:::::::::::::::::::dww:::::::::dddddd:::::::ddddddd:::wwwww:\n" + "::::X::::::::www:#::::wwwwdddwwwwww::::::::::::::::dww:::::::::dgdddd:::::::::ddgdd:::::wwwww\n" + "::::X::::wwwwwwww:::::wwwwwwddddwwww::::::::::::::wwww::::::::ddddgdd::::dd::::ddd::::wwwwww:\n" + "::::X::wwwdwwwwwwww#:::::wwwwwwwwwwww::::d::::::wwwwwd:::::::ddddddddd::dddd::::d::::wwwwwd::\n" + "::::Xwwwdddddddddddwww:::::::wwwwddddwwwwww::::wwwwwdd::::::::dgdddd:::dddHdd:::::::::wwwwwww\n" + ":::wwwddddwwwwwwwwww:::::::wwwwwwdddwwwdddw:::wwww:::dddddd:::ddd:::::dddHdddd::::dddddwwww::\n" + ":wwwwwwwww:::::::::::::::wwwwwwdddddwwdddwww:wwwww::::dddgd::ddd::::::::dddd::::ddddwwwwwwdd:\n" + "www:::::::::wwwwww::::w::::wddwwwddddddddwwwwwwwwww#wwwwdddddd#:::wwwwwwwwwwwwwwwwwddwwwwww::\n" + "w:::::::::::ww::::::www::::wwwwwdHdHddddwwwwwwwwwww#:::wwwwwwwwww#wwwwwwddddddddddwwwwwww::::\n" + "ww::::wwwwwwww::::wwww:::wwwwd:#ddddwwwwww:::wwwwwww:::d:::::::wwd#:::#:dddHddddwwwwwww::::::\n" + "www:::::::::::#:wwww::::wwww:ddddwwwddd:::::::wwwwww:dddd:ww::::ww::::#:::ddddwwwwwwwwww:::::\n" + "wwwwwwww::::::::::::::wwwwww::ddd:::dwwdd::::::::wwwwwdddwww::::ww####ww#####wwwwdddddwww::::\n" + "wwwwwwwwwwwwwwdddwwwwwwwwwdd:dwddd:::dwwwwwdd:::::dwwwwwwwww::::ww::::#::::::www:ddgdddwwwww:\n" + "::::::wwwwwwwwdddwwwwwwddddd::::::w:::dwwwd:::::::ddd::#:#:::::wwww:::#:::::ww::::ddddwwwwdww\n" + ":::wwww:::::::#:::::::::ddd:::::wwwwddddd::::::::::dd::::w::wwwwdww###w:::wwww:::::::::wwwww:\n" + ":wwwwdd::::::::::::::wwwwwdd:::::::wwwddddd:::::::::ddwwwwwwwwwdddww::::::#::#:::::::::::ww::\n" + "wwwwddddd::::::::::::wdddww:::::::::::::::::::::::wwwwwwdddddwdddddwwwwwwwwwwwd:::::::::::www\n" + "::wwwwdddd::::::dddwwwdgd#:::www:::::::::::::wwwwwwwgddwdddddwwwwwdddddHdddddddd:::::::::www:\n" + "::wwwwwwdddddddddwwwwwddd:::::::::wwwwwww:::wwwd#:ddddwwwdd:::#:wwwwdddddddgddddddddd:::www::\n" + ":::::wwwwwdddwwwwwwwwwwwwwwwwwwwwwwww:::wwwwwdHd#::dddddwd::::#::::ddd:wdddddddHdddddddwwww::\n" + "::::::wwwwwwwwww::::::::::::::::::::::::wdHdddddw#######w#####w########w###wddddddd:wwwwwww::\n" + ":::::::dwwwwww:::::::::::::::wwwww::::::wwwwwwwgddddd:::#:::::#::ddd:::#::dddHdddddwwdddddww:\n" + "::::::dwwwwwdww::::ddddd:::::ddddwwww:::::wddwwww#######w#####w:ddgddd:#:dddddddddwwdgdCddww:\n" + ":::::wwdddddCdww:ddddgddd::::dgdddddww::::::wddwwdwddd::#:ddd:#::ddd:::#::::wwwwwwwddddddww::\n" + ":::::wwwdCdddddww:::dddddd:::dddwddHdw:::::::wdddwd:#:::#dddddw########wwwwwwdddddddwwwwww:::\n" + "::::::wwdddCdddd:::::ddgddd:::::::dddww::::::wwwwww#wwwwwwwdgddddd::wwwwwddddHdddwwww::::::::\n" + "::::wwwwwwwwwwdCd:::::dddd:::::ddd:d:::ww::::::::::::wwwwddwwwwwwwww:::ddddd:wwwww:::::::::::\n" + ":::::::wwwwwwwwwwww::dddddd:::ddddd::::::wwwwwwwwwwwwwwwdgdgdwwww::::::::::wwww::::::::::::::\n" + ":::::::::wwwwwwwwwwwwwwwww:::ddgdHd::::::#::#::::::::::::ddddd:::::::::::wwwwww::::::::::::::\n" + "::::::::::wwwwwwwwwwwww:::::ddddddd:::::::::wwwwwwwwwwwwwwwwwwwwww::::::wwwwww:::::::::::::::\n" + ":::::::::::::::::wwwwwww::dddddd::::::::wwwwwwwwwwdddddddddwwwwwwww::::wwwddw::::::::::::::::\n" + ":::::::::::::::::::::wwwwddgddwwwwwwwwwwww::ddddddddddddcddddwwwww#::wwwwddHwwww:::::::::::::\n" + "::::::::::::::::::::::wwwwwwwwwwwwwwwww::::dddgggddddddcccddwwww:::#::wwwddddddww::::::::::::\n" + ":::::::::::::::::::::::wdwwwddwddddwwwww::::ddddddddddddcddddwwwww#wwwwwwdddddww:::::::::::::\n" + "::::::::::::::::::::::::wwdddwddddddwwwww:::::ddddddgdddddddwww#::::wwwddddddww::::::::::::::\n" + ":::::::::::::::::::::::::wwwwwwwwwwwwwwwwwwddddddgddddddddwww::::::::wwwddddww:::::::::::::::\n" + "::::::::::::::::::::::::::ww::::::::::::wwwwwwwdddddgddddwww:::::#::::wwwddww::::::::::::::::\n" + ":::::::::::::::::::::::::::::::::::::::::::::wwww::ddddd::www::::::::wwwddww:::::::::::::::::\n" + ":::::::::::::::::::::::::::::::::::::::::::wwwwwww::::ddddddwwww::::wwwdwww::::::::::::::::::\n" + "::::::::::::::::::::::::::::::::::::::::::::::wwwwwddddwwwddwwwwwwwwwddd:::::::::::::::::::::\n" + "::::::::::::::::::::::::::::::::::::::::::::::::wwwwwwwww:wwwwdwwwdddd:::::::::::::::::::::::\n" + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::dddddddd::::::::::::::::::::::::\n" + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
+        level = ""
+                + "::::::::::::::::::::::::::::ww:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n"
+                + "::::XXXXXXXXXXXXXXXXXXXXXXXwww::::::::::::::::::::::::::::::::wwwwwww::::::::::::::::::::::::\n"
+                + "::::X:::::::::::::::::::::wwwww:::::::::::::::::::::::wwwww:wwwwwdddwwwwwww::wwwwwwwww:::::::\n"
+                + "::::X::::::::::::::::::::wwwwwww:::::::::::::::::::::dwwwwwww::dddHdddddwwwwwwwdddwwwwwwww:::\n"
+                + "::::X:::::::::S:::::::::wwwdddwww:::::::::::::::::::dww:::::::::dddddd:::::::ddddddd:::wwwww:\n"
+                + "::::X::::::::www:#::::wwwwdddwwwwww::::::::::::::::dww:::::::::dgdddd:::::::::ddgdd:::::wwwww\n"
+                + "::::X::::wwwwwwww:::::wwwwwwddddwwww::::::::::::::wwww::::::::ddddgdd::::dd::::ddd::::wwwwww:\n"
+                + "::::X::wwwdwwwwwwww#:::::wwwwwwwwwwww::::d::::::wwwwwd:::::::ddddddddd::dddd::::d::::wwwwwd::\n"
+                + "::::Xwwwdddddddddddwww:::::::wwwwddddwwwwww::::wwwwwdd::::::::dgdddd:::dddHdd:::::::::wwwwwww\n"
+                + ":::wwwddddwwwwwwwwww:::::::wwwwwwdddwwwdddw:::wwww:::dddddd:::ddd:::::dddHdddd::::dddddwwww::\n"
+                + ":wwwwwwwww:::::::::::::::wwwwwwdddddwwdddwww:wwwww::::dddgd::ddd::::::::dddd::::ddddwwwwwwdd:\n"
+                + "www:::::::::wwwwww::::w::::wddwwwddddddddwwwwwwwwww#wwwwdddddd#:::wwwwwwwwwwwwwwwwwddwwwwww::\n"
+                + "w:::::::::::ww::::::www::::wwwwwdHdHddddwwwwwwwwwww#:::wwwwwwwwww#wwwwwwddddddddddwwwwwww::::\n"
+                + "ww::::wwwwwwww::::wwww:::wwwwd:#ddddwwwwww:::wwwwwww:::d:::::::wwd#:::#:dddHddddwwwwwww::::::\n"
+                + "www:::::::::::#:wwww::::wwww:ddddwwwddd:::::::wwwwww:dddd:ww::::ww::::#:::ddddwwwwwwwwww:::::\n"
+                + "wwwwwwww::::::::::::::wwwwww::ddd:::dwwdd::::::::wwwwwdddwww::::ww####ww#####wwwwdddddwww::::\n"
+                + "wwwwwwwwwwwwwwdddwwwwwwwwwdd:dwddd:::dwwwwwdd:::::dwwwwwwwww::::ww::::#::::::www:ddgdddwwwww:\n"
+                + "::::::wwwwwwwwdddwwwwwwddddd::::::w:::dwwwd:::::::ddd::#:#:::::wwww:::#:::::ww::::ddddwwwwdww\n"
+                + ":::wwww:::::::#:::::::::ddd:::::wwwwddddd::::::::::dd::::w::wwwwdww###w:::wwww:::::::::wwwww:\n"
+                + ":wwwwdd::::::::::::::wwwwwdd:::::::wwwddddd:::::::::ddwwwwwwwwwdddww::::::#::#:::::::::::ww::\n"
+                + "wwwwddddd::::::::::::wdddww:::::::::::::::::::::::wwwwwwdddddwdddddwwwwwwwwwwwd:::::::::::www\n"
+                + "::wwwwdddd::::::dddwwwdgd#:::www:::::::::::::wwwwwwwgddwdddddwwwwwdddddHdddddddd:::::::::www:\n"
+                + "::wwwwwwdddddddddwwwwwddd:::::::::wwwwwww:::wwwd#:ddddwwwdd:::#:wwwwdddddddgddddddddd:::www::\n"
+                + ":::::wwwwwdddwwwwwwwwwwwwwwwwwwwwwwww:::wwwwwdHd#::dddddwd::::#::::ddd:wdddddddHdddddddwwww::\n"
+                + "::::::wwwwwwwwww::::::::::::::::::::::::wdHdddddw#######w#####w########w###wddddddd:wwwwwww::\n"
+                + ":::::::dwwwwww:::::::::::::::wwwww::::::wwwwwwwgddddd:::#:::::#::ddd:::#::dddHdddddwwdddddww:\n"
+                + "::::::dwwwwwdww::::ddddd:::::ddddwwww:::::wddwwww#######w#####w:ddgddd:#:dddddddddwwdgdCddww:\n"
+                + ":::::wwdddddCdww:ddddgddd::::dgdddddww::::::wddwwdwddd::#:ddd:#::ddd:::#::::wwwwwwwddddddww::\n"
+                + ":::::wwwdCdddddww:::dddddd:::dddwddHdw:::::::wdddwd:#:::#dddddw########wwwwwwdddddddwwwwww:::\n"
+                + "::::::wwdddCdddd:::::ddgddd:::::::dddww::::::wwwwww#wwwwwwwdgddddd::wwwwwddddHdddwwww::::::::\n"
+                + "::::wwwwwwwwwwdCd:::::dddd:::::ddd:d:::ww::::::::::::wwwwddwwwwwwwww:::ddddd:wwwww:::::::::::\n"
+                + ":::::::wwwwwwwwwwww::dddddd:::ddddd::::::wwwwwwwwwwwwwwwdgdgdwwww::::::::::wwww::::::::::::::\n"
+                + ":::::::::wwwwwwwwwwwwwwwww:::ddgdHd::::::#::#::::::::::::ddddd:::::::::::wwwwww::::::::::::::\n"
+                + "::::::::::wwwwwwwwwwwww:::::ddddddd:::::::::wwwwwwwwwwwwwwwwwwwwww::::::wwwwww:::::::::::::::\n"
+                + ":::::::::::::::::wwwwwww::dddddd::::::::wwwwwwwwwwdddddddddwwwwwwww::::wwwddw::::::::::::::::\n"
+                + ":::::::::::::::::::::wwwwddgddwwwwwwwwwwww::ddddddddddddcddddwwwww#::wwwwddHwwww:::::::::::::\n"
+                + "::::::::::::::::::::::wwwwwwwwwwwwwwwww::::dddgggddddddcccddwwww:::#::wwwddddddww::::::::::::\n"
+                + ":::::::::::::::::::::::wdwwwddwddddwwwww::::ddddddddddddcddddwwwww#wwwwwwdddddww:::::::::::::\n"
+                + "::::::::::::::::::::::::wwdddwddddddwwwww:::::ddddddgdddddddwww#::::wwwddddddww::::::::::::::\n"
+                + ":::::::::::::::::::::::::wwwwwwwwwwwwwwwwwwddddddgddddddddwww::::::::wwwddddww:::::::::::::::\n"
+                + "::::::::::::::::::::::::::ww::::::::::::wwwwwwwdddddgddddwww:::::#::::wwwddww::::::::::::::::\n"
+                + ":::::::::::::::::::::::::::::::::::::::::::::wwww::ddddd::www::::::::wwwddww:::::::::::::::::\n"
+                + ":::::::::::::::::::::::::::::::::::::::::::wwwwwww::::ddddddwwww::::wwwdwww::::::::::::::::::\n"
+                + "::::::::::::::::::::::::::::::::::::::::::::::wwwwwddddwwwddwwwwwwwwwddd:::::::::::::::::::::\n"
+                + "::::::::::::::::::::::::::::::::::::::::::::::::wwwwwwwww:wwwwdwwwdddd:::::::::::::::::::::::\n"
+                + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::dddddddd::::::::::::::::::::::::\n"
+                + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
 
-        String complex = "[msg;Use the arrow keys to move;50]\n" + "[tz;120;120;startScript;0]\n" + "[dp;5]\n" + "[msg;Weakness - Hydrogen Peroxide;50]\n" + "[tz;280;120;powerUpScript;0]\n" + "[gt;hper;1;40;40;Explore the Asteroid]\n" + "[tz;120;120;hydrogenScript;0]\n" + "[tz;120;120;defenceIntroScript;0]\n" + "[tw;2000;0]\n" + "[tz;120;120;digScript;0]\n" + "[tw;2000;0]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tw;2000;0]\n" + "[tz;120;120;waterScript;0]\n" + "[gt;w;1;40;40;Explore the Asteroid]\n" + "[tw;2000;0]\n" + "[tz;120;120;afterDigScript;0]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tz;120;120;hclScript;0]\n" + "[gt;hcl;1;40;40;Explore the Asteroid]\n" + "[tz;120;120;gasScript;0]\n" + "[tw;2500;0]\n" + "[tw;2500;0]\n" + "[tw;2500;0]\n" + "[tw;2500;0]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1500;0]\n" + "[tw;1500;0]\n" + "[tw;1500;0]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1500;0]\n" + "[tw;1500;0]\n" + "[tw;1500;0]\n" + "[tw;1500;0]\n" + "[msg;Weakness - Hydroxide (x5);50]\n" + "[tw;1500;0]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[gt;hydroxide;5;40;40;Explore the Asteroid]\n" + "[tz;120;120;co2Script;0]\n" + "[gt;co2;6;40;40;Explore the Asteroid]\n" + "[tz;120;40;carboScript;0]\n" + "[msg;Weakness - Carbonic Acid;50]\n" + "[gt;carbo;1;40;40;Explore the Asteroid]\n" + "[tz;240;40;finalScript;0]\n" + "[terminal;LevelTwo]\n";
+        String complex = "[msg;Use the arrow keys to move;50]\n"
+				+ "[tz;120;120;startScript;0]\n" + "[dp;5]\n"
+				+ "[msg;Weakness - Hydrogen Peroxide;50]\n"
+				+ "[tz;280;120;powerUpScript;0]\n"
+				+ "[gt;hper;1;40;40;Explore the Asteroid]\n"
+				+ "[tz;120;120;hydrogenScript;0]\n"
+				+ "[tz;120;120;defenceIntroScript;0]\n" + "[tw;2000;0]\n"
+				+ "[tz;120;120;digScript;0]\n" + "[tw;2000;0]\n"
+				+ "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n"
+				+ "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n"
+				+ "[tw;1500;1]\n" + "[tw;1500;1]\n" + "[tw;1500;1]\n"
+				+ "[tw;2000;0]\n" + "[tz;120;120;waterScript;0]\n"
+				+ "[gt;w;1;40;40;Explore the Asteroid]\n" + "[tw;2000;0]\n"
+				+ "[tz;120;120;afterDigScript;0]\n" + "[tw;1500;1]\n"
+				+ "[tw;1500;1]\n" + "[tw;1500;1]\n"
+				+ "[tz;120;120;hclScript;0]\n"
+				+ "[gt;hcl;1;40;40;Explore the Asteroid]\n"
+				+ "[tz;120;120;gasScript;0]\n" + "[tw;2500;0]\n"
+				+ "[tw;2500;0]\n" + "[tw;2500;0]\n" + "[tw;2500;0]\n"
+				+ "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n"
+				+ "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n"
+				+ "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n"
+				+ "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n"
+				+ "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n"
+				+ "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n"
+				+ "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n"
+				+ "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1500;0]\n"
+				+ "[tw;1500;0]\n" + "[tw;1500;0]\n" + "[tw;1850;1]\n"
+				+ "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n"
+				+ "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n"
+				+ "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1850;1]\n"
+				+ "[tw;1850;1]\n" + "[tw;1850;1]\n" + "[tw;1500;0]\n"
+				+ "[tw;1500;0]\n" + "[tw;1500;0]\n" + "[tw;1500;0]\n"
+				+ "[msg;Weakness - Hydroxide (x5);50]\n" + "[tw;1500;0]\n"
+				+ "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n"
+				+ "[tw;1750;1]\n" + "[tw;1750;1]\n" + "[tw;1750;1]\n"
+				+ "[tw;1750;1]\n" + "[tw;1750;1]\n"
+				+ "[gt;hydroxide;5;40;40;Explore the Asteroid]\n"
+				+ "[tz;120;120;co2Script;0]\n"
+				+ "[gt;co2;6;40;40;Explore the Asteroid]\n"
+				+ "[tz;120;40;carboScript;0]\n"
+				+ "[msg;Weakness - Carbonic Acid;50]\n"
+				+ "[gt;carbo;1;40;40;Explore the Asteroid]\n"
+				+ "[tz;240;40;finalScript;0]\n" + "[terminal;LevelTwo]\n";
+        // @formatter:on
 
         startScript = new MessagePopupEntity(game, 50, "Welcome BK201 to A-52-n" + "Funding has been approved for -n" + "the exploration of this sector.-n" + "Our scientists believe that a-n" + "valuable material can be found-n" + "near the center of this asteroid.-n" + "Please proceed for further-ninstruction.-n-n" + "End Transmission.", "computer/startScript.wav");
 
@@ -82,6 +186,7 @@ public class LevelOne extends LevelLoader {
         loadLevel(complex);
     }
 
+    @Override
     public void act(String source) {
         if (source.equals("startScript")) {
             startScript.setAlive(true);
@@ -130,7 +235,7 @@ public class LevelOne extends LevelLoader {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public Object clone() {
         return new LevelOne(game);
     }
 
@@ -161,7 +266,7 @@ public class LevelOne extends LevelLoader {
         if (isOnLoadFinished && !bgPlay) {
             // load game sound
             bgPlay = true;
-            bg_sound.playSound();
+            backgroundSound.playSound();
         }
     }
 

@@ -12,17 +12,15 @@ import java.awt.Graphics;
  */
 public class BlockAnim extends BlockEntity {
 
-    CosmosSprite[] constAnimSprites;
-    int consAnimCurrent = 0;
+    private CosmosSprite[] constAnimSprites;
     // constant animation timer
-    int constAnimTimer = 0;
-    int constAnimStep = 0;
+    private int constAnimTimer = 0;
+    private int constAnimStep = 0;
 
     public BlockAnim(GameCanvas game, String folder, String ref, String onDeath, String consAnim, int x, int y, int width, int height, int health, boolean respawn, Item onDeathDrop) {
         super(game, folder, ref, onDeath, x, y, width, height, onDeathDrop, health, respawn);
-        String[] imgs = null;
         if (ref != null) {
-            imgs = consAnim.split(";");
+            String[] imgs = consAnim.split(";");
             this.constAnimSprites = new CosmosSprite[imgs.length];
             for (int i = 0; i < imgs.length; i++) {
                 if (folder != null)

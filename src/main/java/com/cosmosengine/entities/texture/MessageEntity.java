@@ -13,10 +13,10 @@ public class MessageEntity extends CosmosEntity {
 
     private String[] parts;
     private String[] message;
-    int y_space = 15;
-    int row = 0;
-    int charCount = 0;
-    int timeCount = 0;
+    private int ySpace = 15;
+    private int row = 0;
+    private int charCount = 0;
+    private int timeCount = 0;
 
     public MessageEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, int width, int height, long millis, String msg) {
         super(game, folder, ref, onDeath, x, y, width, height, millis);
@@ -31,11 +31,11 @@ public class MessageEntity extends CosmosEntity {
     @Override
     public void draw(Graphics g) {
         g.setColor(Color.WHITE);
-        for (int i = 0; i < message.length; i++) {
-            g.drawString(message[i], (int) me.x, (int) me.y + y_space);
-            y_space += 15;
+        for (String letter : message) {
+            g.drawString(letter, me.x, me.y + ySpace);
+            ySpace += 15;
         }
-        y_space = 15;
+        ySpace = 15;
     }
 
     @Override

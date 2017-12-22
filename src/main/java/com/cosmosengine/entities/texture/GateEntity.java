@@ -8,10 +8,9 @@ import com.cosmosengine.inventory.Item;
  */
 public class GateEntity extends BlockEntity {
 
-    Item killWith;
-    int quantityNeeded;
-    boolean removed = false;
-    String onDeathObj;
+    private Item killWith;
+    private int quantityNeeded;
+    private String onDeathObj;
 
     public GateEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, int width, int height, Item killWith, int quantity, String onDeathObj, int health) {
         super(game, folder, ref, onDeath, x, y, width, height, null, health, false);

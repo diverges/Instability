@@ -10,7 +10,7 @@ import java.awt.Graphics;
 public class HealthUpEntity extends CosmosEntity {
 
     private CosmosSprite sprite;
-    int amount = 0;
+    private int amount;
 
     /**
      * @param amount number to increment power by

@@ -12,14 +12,15 @@ import java.awt.Rectangle;
 public class ItemSlot {
     public static final int DEFAULT_MAX = 24;
 
-    private int max = 24; // maximum number of this item per
+    private int max; // maximum number of this item per
     // slot
     private int quantity = 0; // current quantity in slot
     private Rectangle me = new Rectangle();
 
-    protected int x, y;
+    int x;
+    private int y;
 
-    Item item;
+    private Item item;
 
     public ItemSlot(int x, int y, int max) {
         this.x = x;

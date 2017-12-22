@@ -11,7 +11,8 @@ import java.awt.Graphics;
  */
 public class JumperEntity extends CosmosEntity {
 
-    int targetX, targetY;
+    private int targetX;
+    private int targetY;
 
     public JumperEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, int width, int height, long millis, int targetX, int targetY) {
         super(game, folder, ref, onDeath, x, y, width, height, millis);
@@ -21,13 +22,11 @@ public class JumperEntity extends CosmosEntity {
 
     @Override
     public void collision() {
-
         if (game.player.getPoint().distance(this.getPoint()) < 20) {
-            game.player.getBounds().x = CosmosConstants.x_Offset;
-            game.player.getBounds().y = CosmosConstants.y_Offset;
+            game.player.getBounds().x = CosmosConstants.X_OFFSET;
+            game.player.getBounds().y = CosmosConstants.Y_OFFSET;
             game.level.positionCamera(targetX, targetY); // teleport player
         }
-
     }
 
     @Override

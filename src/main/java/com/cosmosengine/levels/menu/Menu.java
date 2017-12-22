@@ -17,41 +17,47 @@ import java.util.ArrayList;
  */
 public abstract class Menu implements Clickable {
     GameCanvas game;
-    protected ArrayList<CosmosEntity> levelTextureObjects = new ArrayList<CosmosEntity>();
-    protected CosmosSprite background;
+    ArrayList<CosmosEntity> levelTextureObjects = new ArrayList<>();
+    CosmosSprite background;
     public CosmosSound sound;
 
-    public Menu(GameCanvas game) {
+    Menu(GameCanvas game) {
         this.game = game;
         sound = SoundLoader.get().getSound("menu/melospace.wav");
         if (sound != null)
             sound.playSound();
     }
 
-    public void mouseEntered(MouseEvent e) {
+    @Override
+    public void mouseEntered(MouseEvent event) {
     }
 
-    public void mouseExited(MouseEvent e) {
+    @Override
+    public void mouseExited(MouseEvent event) {
     }
 
-    public void mouseMoved(MouseEvent e) {
+    @Override
+    public void mouseMoved(MouseEvent event) {
     }
 
-    public void mousePressed(MouseEvent e) {
+    @Override
+    public void mousePressed(MouseEvent event) {
         for (CosmosEntity b : levelTextureObjects) {
             if (b instanceof ButtonEntity) {
                 ButtonEntity button = (ButtonEntity) b;
-                if ((button.isInButton(e.getPoint()))) {
+                if ((button.isInButton(event.getPoint()))) {
                     button.pushDown();
                 }
             }
         }
     }
 
-    public void mouseDragged(MouseEvent e) {
+    @Override
+    public void mouseDragged(MouseEvent event) {
     }
 
-    public void mouseReleased(MouseEvent e) {
+    @Override
+    public void mouseReleased(MouseEvent event) {
         for (CosmosEntity b : levelTextureObjects) {
             if (b instanceof ButtonEntity) {
                 ButtonEntity button = (ButtonEntity) b;

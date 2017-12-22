@@ -6,21 +6,22 @@ import com.cosmosengine.inventory.Item;
 /**
  * This class will define all constants needed for the game.
  */
+@SuppressWarnings("WeakerAccess")
 public class CosmosConstants {
-    public static final long period = 10; // amount in ms to wait each loop
+    public static final long PERIOD = 10; // amount in ms to wait each loop
     // (will vary depending on
     // computer's speed)
-    public static final boolean debug = false; // DEBUG CONTROL TOOL
-    public static boolean sounds = true;
+    public static final boolean DEBUG = false; // DEBUG CONTROL TOOL
+    public static boolean SOUNDS = true;
     /*
      * Canvas Properties
      */
     public static int WIDTH = 854; // screen width
     public static int HEIGHT = 480; // screen height
-    public static int x_Offset = 400; // defines sidescrolling
-    public static int y_Offset = 200; // defines sidescrolling
-    static int screenXBound = 0;
-    static int screenYBound = 0;
+    public static int X_OFFSET = 400; // defines sidescrolling
+    public static int Y_OFFSET = 200; // defines sidescrolling
+    static int SCREEN_X_BOUND = 0;
+    static int SCREEN_Y_BOUND = 0;
 
     /*
      * Items
