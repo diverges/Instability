@@ -3,25 +3,37 @@ package com.cosmosengine;
 import com.cosmosengine.inventory.Combination;
 import com.cosmosengine.inventory.Item;
 
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
+
 /**
  * This class will define all constants needed for the game.
  */
 @SuppressWarnings("WeakerAccess")
 public class CosmosConstants {
+    public final static float SCALE = 1;
+
     public static final long PERIOD = 10; // amount in ms to wait each loop
-    // (will vary depending on
-    // computer's speed)
+    // (will vary depending on computer's speed)
     public static final boolean DEBUG = false; // DEBUG CONTROL TOOL
     public static boolean SOUNDS = true;
+
+    public static final Font DEFAULT_FONT = new Font("HELVETICA", Font.PLAIN, (int) (12 * SCALE));
+    public static final Font SMALL_FONT = new Font("HELVETICA", Font.PLAIN, (int) (8 * SCALE));
+
     /*
      * Canvas Properties
      */
-    public static int WIDTH = 854; // screen width
-    public static int HEIGHT = 480; // screen height
-    public static int X_OFFSET = 400; // defines sidescrolling
-    public static int Y_OFFSET = 200; // defines sidescrolling
-    static int SCREEN_X_BOUND = 0;
-    static int SCREEN_Y_BOUND = 0;
+    public static int WIDTH = 1280; // screen width
+    public static int HEIGHT = 720; // screen height
+    public static int X_OFFSET = (int) ((WIDTH / 2) - (20 * SCALE)); // defines sidescrolling
+    public static int Y_OFFSET = (int) ((HEIGHT / 2) - (20 * SCALE)); // defines sidescrolling
+    static int SCREEN_X_BOUND = WIDTH - X_OFFSET;
+    static int SCREEN_Y_BOUND = HEIGHT - Y_OFFSET;
+    public static Rectangle LAST_STRING_BOUNDS = null;
 
     /*
      * Items
@@ -93,4 +105,16 @@ public class CosmosConstants {
     public static final String LEVEL_SCREEN = "disruptedsector";
     public static final String GOD_MODE = "iwillwin";
     public static final String NO_CLIP = "noclip";
+
+    public static Rectangle getStringBounds(Graphics2D g2, String str, float x, float y) {
+        FontRenderContext frc = g2.getFontRenderContext();
+        GlyphVector gv = g2.getFont().createGlyphVector(frc, str);
+        return gv.getPixelBounds(null, x, y);
+    }
+
+    public static Rectangle drawStringFromTop(Graphics2D g2, String str, float x, float y) {
+        Rectangle bounds = getStringBounds(g2, str, x, y);
+        g2.drawString(str, x, y + bounds.height);
+        return new Rectangle((int) x, (int) y, bounds.width, bounds.height);
+    }
 }

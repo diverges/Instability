@@ -13,6 +13,7 @@ import com.cosmosengine.levels.menu.MenuLevelSelect;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -68,13 +69,11 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
      * @param onDeath
      * @param x
      * @param y
-     * @param width
-     * @param height
      * @param millis
      * @param speed
      */
-    public PlayerEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, int width, int height, long millis, int speed) {
-        super(game, folder, ref, onDeath, x, y, width, height, millis);
+    public PlayerEntity(GameCanvas game, String folder, String ref, String onDeath, int x, int y, long millis, int speed) {
+        super(game, folder, ref, onDeath, x, y, 35, 35, millis);
         dX = speed;
         dY = speed;
         inventory = new Inventory(game);
@@ -249,11 +248,11 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
 
         // display armor
         g.setColor(Color.RED);
-        g.drawString("Armor: " + this.armor, 32, 50);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Armor: " + this.armor, 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
 
         // display the drill power
         g.setColor(Color.GREEN);
-        g.drawString("Saw Power: " + this.damagePower, 32, 62);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Saw Power: " + this.damagePower, 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
 
         if (dealtDamage != -1) {
             drawStep++;
@@ -345,7 +344,7 @@ public class PlayerEntity extends CosmosEntity implements Killable, Clickable, K
                     enteredCheatMode = false;
                     break;
                 case CosmosConstants.NO_CLIP:
-                    game.noclip = !game.noclip;
+                    game.noClip = !game.noClip;
                     game.unpause();
                     enteredCheatMode = false;
                     break;

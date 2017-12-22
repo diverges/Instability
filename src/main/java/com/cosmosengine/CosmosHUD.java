@@ -5,6 +5,7 @@ import com.cosmosengine.interfaces.Clickable;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
@@ -27,21 +28,28 @@ public class CosmosHUD implements Clickable {
          * staticEntities.add(new ButtonEntity(game, "sound", null, null, null, game.getParent().getWidth() - 75, 15, 50, 50, "Sound"));
          */
 
-        staticEntities.add(new ButtonEntity(game, "Pause", "hud", "reset-button-idle.png;reset-button-clicked.png", null, game.getParent().getWidth() - 100, game.getParent()
-                                                                                                                                                                 .getHeight() - 70, 100, 50));
-        staticEntities.add(new ButtonEntity(game, "Inventory", "hud", "inventory-button-idle.png;inventory-button-clicked.png", null, game.getParent().getWidth() - 200, game.getParent()
-                                                                                                                                                                             .getHeight() - 70, 100, 50));
+
+        ButtonEntity pause = new ButtonEntity(game, "Pause", "hud", "reset-button-idle.png;reset-button-clicked.png", null, 0, 0);
+        ButtonEntity inventory = new ButtonEntity(game, "Inventory", "hud", "inventory-button-idle.png;inventory-button-clicked.png", null, 0, 0);
+        staticEntities.add(pause);
+        staticEntities.add(inventory);
+
+        pause.setX(CosmosConstants.WIDTH - pause.getWidth() - 20);
+        pause.setY(CosmosConstants.HEIGHT - pause.getHeight() - 20);
+
+        inventory.setX(pause.getX() - inventory.getWidth() - 20);
+        inventory.setY(CosmosConstants.HEIGHT - inventory.getHeight() - 20);
     }
 
     public void draw(Graphics g) {
-        if (enabled) {
-            g.setColor(Color.WHITE);
-            g.drawString("Objective: " + game.getObjective(), 32, 75);
-            g.drawString(game.level.name, 32, 35);
-            for (CosmosEntity c : staticEntities) {
-                c.draw(g);
-            }
+        //if (enabled) {
+        g.setColor(Color.WHITE);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Objective: " + game.getObjective(), 32, 32);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, game.level.name, 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
+        for (CosmosEntity c : staticEntities) {
+            c.draw(g);
         }
+        //}
     }
 
     public ArrayList<CosmosEntity> getStaticEntities() {
@@ -119,5 +127,12 @@ public class CosmosHUD implements Clickable {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public void resize(int deltaWidth, int deltaHeight) {
+        for (CosmosEntity obj : staticEntities) {
+            obj.getBounds().y = (obj.getBounds().y + deltaHeight);
+            obj.getBounds().x = (obj.getBounds().x + deltaWidth);
+        }
     }
 }

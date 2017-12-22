@@ -22,7 +22,6 @@ import com.cosmosengine.inventory.Item;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -99,7 +98,6 @@ public abstract class LevelLoader implements Loadable, Cloneable {
     // Part 1: Load entire level string
     // complex may be ""
     protected void loadLevel(String complex) {
-
         String[] complexBlocks = null;
 
         if (!complex.equals("")) {
@@ -118,27 +116,21 @@ public abstract class LevelLoader implements Loadable, Cloneable {
             if (CosmosConstants.DEBUG)
                 System.out.println(row);
 
-            yPos += 40; // move to next row
+            yPos += (int) (40 * CosmosConstants.SCALE); // move to next row
 
         }
 
         // Center player object
         positionCamera(xPlayer, yPlayer);
-
     }
 
-    // Part 2: grab each individual row provided by loadLevel() and grab each
-    // individual
-    // block
+    // Part 2: grab each individual row provided by loadLevel() and grab each individual block
     private void loadRow(String[] complexBlocks, String row, int yPos) {
         int xPos = 0; // reset x
         // String param = "";
         // boolean loadComplexBlock = false;
         for (int i = 0; i < row.length(); i++) {
             char block = row.charAt(i);
-            if (CosmosConstants.DEBUG)
-                System.out.println(xPos);
-
             if (block != '#')
                 loadBlock(block, xPos, yPos); // load block
             // else
@@ -154,7 +146,7 @@ public abstract class LevelLoader implements Loadable, Cloneable {
              * loadComplexBlock = false; // close load } } else
              */
 
-            xPos += 40; // move to next block
+            xPos += (int) (40 * CosmosConstants.SCALE); // move to next block
         }
     }
 
@@ -172,7 +164,6 @@ public abstract class LevelLoader implements Loadable, Cloneable {
             case 'H':
                 this.levelTextureObjects.add(new BlockEntity(game, "hydrogen_sprites", "hydrogen-break1.png;dirt-break8.png;dirt-break7.png;dirt-break6.png;dirt-break5.png;dirt-break4.png;dirt-break3.png;dirt-break2.png", "dirt-get1.png;dirt-get2.png;dirt-get3.png;dirt-get4.png;dirt-get5.png;dirt-get6.png", xPos, yPos, 40, 40, CosmosConstants.HYDROGEN, 50, true));
                 break;
-
             case 'C':
                 this.levelTextureObjects.add(new BlockEntity(game, "carbon_sprites", "carbon-break1.png;carbon-break8.png;carbon-break7.png;carbon-break6.png;carbon-break5.png;carbon-break4.png;carbon-break3.png;carbon-break2.png", "carbon-get1.png;carbon-get2.png;carbon-get3.png;carbon-get4.png;carbon-get5.png;carbon-get6.png", xPos, yPos, 40, 40, CosmosConstants.CARBON, 40, true));
                 break;
@@ -216,7 +207,6 @@ public abstract class LevelLoader implements Loadable, Cloneable {
                 levelEnemyObjects.add(new EnemyEntity(game, null, null, null, xPos, yPos, 40, 40, -1));
                 break;
         }
-
     }
 
     // Part 3b: Loads an extended block
@@ -336,14 +326,20 @@ public abstract class LevelLoader implements Loadable, Cloneable {
         if (obj.equals("sk")) {
             // load a spike block
             int direction = 0;
-            if (components[1].equals("SOUTH"))
-                direction = SpikeEnemyEntity.SOUTH;
-            if (components[1].equals("NORTH"))
-                direction = SpikeEnemyEntity.NORTH;
-            if (components[1].equals("WEST"))
-                direction = SpikeEnemyEntity.WEST;
-            if (components[1].equals("EAST"))
-                direction = SpikeEnemyEntity.EAST;
+            switch (components[1]) {
+                case "SOUTH":
+                    direction = SpikeEnemyEntity.SOUTH;
+                    break;
+                case "NORTH":
+                    direction = SpikeEnemyEntity.NORTH;
+                    break;
+                case "WEST":
+                    direction = SpikeEnemyEntity.WEST;
+                    break;
+                case "EAST":
+                    direction = SpikeEnemyEntity.EAST;
+                    break;
+            }
 
             this.levelEnemyObjects.add(new SpikeEnemyEntity(game, "spiked_enemy_sprites", "bot1.png;bot2.png", xPos, yPos, 100, direction, Integer.parseInt(components[2]), Integer.parseInt(components[3])));
         }
@@ -373,8 +369,33 @@ public abstract class LevelLoader implements Loadable, Cloneable {
         }
 
         if (background != null) {
-            backgroundX = (backgroundX - (x - CosmosConstants.X_OFFSET));
             backgroundY = (backgroundY - (y - CosmosConstants.Y_OFFSET));
+            backgroundX = (backgroundX - (x - CosmosConstants.X_OFFSET));
+        }
+    }
+
+
+    public void resize(int deltaWidth, int deltaHeight) {
+        int x = deltaWidth / 2;
+        int y = deltaHeight / 2;
+        for (CosmosEntity obj : getLevelTextureObjects()) {
+            obj.getBounds().y = (obj.getBounds().y + y);
+            obj.getBounds().x = (obj.getBounds().x + x);
+        }
+
+        for (CosmosEntity obj : getLevelEnemyObjects()) {
+            obj.getBounds().y = (obj.getBounds().y + y);
+            obj.getBounds().x = (obj.getBounds().x + x);
+        }
+
+        for (CosmosEntity obj : getLevelInteractiveObjects()) {
+            obj.getBounds().y = (obj.getBounds().y + y);
+            obj.getBounds().x = (obj.getBounds().x + x);
+        }
+
+        if (background != null) {
+            backgroundY = (backgroundY + y);
+            backgroundX = (backgroundX + x);
         }
     }
 
@@ -394,31 +415,27 @@ public abstract class LevelLoader implements Loadable, Cloneable {
             background.draw(g, backgroundX, backgroundY);
         Point playerPoint = new Point(game.player.getBounds().x, game.player.getBounds().y);
         // Paint all level components
-        try {
-            List<CosmosEntity> list = levelTextureObjects;
-            for (CosmosEntity obj : list) {
-                if (playerPoint.distance(new Point(obj.getBounds().x, obj.getBounds().y)) < CosmosConstants.WIDTH - 100 && obj.isAlive())
-                    obj.draw(g);
+
+        for (CosmosEntity obj : levelTextureObjects) {
+            if (playerPoint.distance(new Point(obj.getBounds().x, obj.getBounds().y)) < CosmosConstants.WIDTH - 100 && obj.isAlive())
+                obj.draw(g);
+        }
+
+        for (CosmosEntity obj : levelEnemyObjects) {
+            if (playerPoint.distance(obj.getPoint()) < CosmosConstants.WIDTH - 100) {
+                // check if object is not dead
+                obj.draw(g);
             }
-            list = levelEnemyObjects;
-            for (CosmosEntity obj : list) {
-                if (playerPoint.distance(obj.getPoint()) < CosmosConstants.WIDTH - 100) {
-                    // check if object is not dead
-                    obj.draw(g);
-                }
-            }
-            list = levelInteractiveObjects;
-            for (CosmosEntity obj : list) {
-                if (playerPoint.distance(obj.getPoint()) < CosmosConstants.WIDTH - 100 && obj.isAlive())
-                    obj.draw(g);
-            }
-            list = levelConstantObjects;
-            for (CosmosEntity obj : list) {
-                if (playerPoint.distance(obj.getPoint()) < CosmosConstants.WIDTH - 100 && obj.isAlive())
-                    obj.draw(g);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+
+        for (CosmosEntity obj : levelInteractiveObjects) {
+            if (playerPoint.distance(obj.getPoint()) < CosmosConstants.WIDTH - 100 && obj.isAlive())
+                obj.draw(g);
+        }
+
+        for (CosmosEntity obj : levelConstantObjects) {
+            if (playerPoint.distance(obj.getPoint()) < CosmosConstants.WIDTH - 100 && obj.isAlive())
+                obj.draw(g);
         }
     }
 

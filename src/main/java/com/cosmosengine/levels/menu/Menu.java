@@ -72,4 +72,11 @@ public abstract class Menu implements Clickable {
         for (CosmosEntity b : levelTextureObjects)
             b.draw(g);
     }
+
+    public void resize(int deltaWidth, int deltaHeight) {
+        for (CosmosEntity obj : levelTextureObjects) {
+            obj.getBounds().y = (obj.getBounds().y + deltaHeight);
+            obj.getBounds().x = (obj.getBounds().x + deltaWidth);
+        }
+    }
 }

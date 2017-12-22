@@ -7,8 +7,8 @@ import com.cosmosengine.levels.menu.MenuMain;
 
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
@@ -16,6 +16,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.util.HashMap;
+
+import javax.swing.SwingUtilities;
 
 /**
  * The main class where all of the updating/rendering/drawing will be processed.
@@ -43,7 +45,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
     // specify the current objective to display onLoad()
     private String currentObjective = "No objective, you're in DEBUG mode...";
     private boolean isPaused = false; // control pause status if game
-    public boolean noclip = false;
+    public boolean noClip = false;
     private HashMap<Integer, ItemSlot> slots;
 
     public GameCanvas() {
@@ -53,12 +55,6 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
         this.setVisible(true);
 
         // SoundLoader.get().getSound("background.mid").playSound();
-
-        // define center
-        CosmosConstants.X_OFFSET = CosmosConstants.WIDTH / 2;
-        CosmosConstants.Y_OFFSET = CosmosConstants.HEIGHT / 2;
-        player = new PlayerEntity(this, "player_sprites", "player-move01.png;player-move02.png;player-move03.png;player-move04.png;player-move05.png;", null, CosmosConstants.X_OFFSET, CosmosConstants.Y_OFFSET, 35, 35, -1, 3); // load player
-        menu = new MenuMain(this); // load main menu on boot
 
     }
 
@@ -70,18 +66,48 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
     public void addNotify() {
         super.addNotify(); // load canvas functions
 
-        // double buffer
+        new Thread(() -> {
+            while (getParent().getWidth() == 0) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ignored) {
+                }
+            }
+            SwingUtilities.invokeLater(() -> {
+                if (CosmosConstants.DEBUG) {
+                    System.out.println("JFrame size: " + getParent().getBounds());
+                    System.out.println("Canvas size: " + getBounds());
+                    System.out.println("Constant size: W: " + CosmosConstants.WIDTH + " H: " + CosmosConstants.HEIGHT);
+                }
+                resizeCanvas(getParent().getWidth(), getParent().getHeight());
+
+                resetBuffer();
+
+                player = new PlayerEntity(this, "player_sprites", "player-move01.png;player-move02.png;player-move03.png;player-move04.png;player-move05.png;", null, CosmosConstants.X_OFFSET, CosmosConstants.Y_OFFSET, -1, 3); // load player
+                menu = new MenuMain(this); // load main menu on boot
+
+                // event listeners
+                this.addMouseListener(this);
+                this.addMouseMotionListener(this);
+                this.addKeyListener(player);
+
+                // load game
+                this.requestFocus();
+                startGame();
+            });
+        }).start();
+    }
+
+    public synchronized void resetBuffer() {
+        if (buffer != null) {
+            buffer.dispose();
+
+            if (graphics != null) {
+                graphics.dispose();
+            }
+        }
         this.createBufferStrategy(2);
         buffer = this.getBufferStrategy();
-
-        // event listeners
-        this.addMouseListener(this);
-        this.addMouseMotionListener(this);
-        this.addKeyListener(player);
-
-        // load game
-        this.requestFocus();
-        startGame();
     }
 
     /**
@@ -101,7 +127,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
     public void run() {
         while (true) {
             // check if no menu is loaded
-            if (menu == null) {
+            if (menu == null && level != null) {
                 if (!player.checkIfAlive()) { // if player is dead
                     player.onDeath();
                 }
@@ -112,27 +138,17 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
 
                 try {
                     Thread.sleep(CosmosConstants.PERIOD);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    break;
                 }
 
-                // Loading screen default sleep time
                 if (level.isLoading) {
                     if (level.isOnLoadFinished) {
                         level.isLoading = false;
-                        try {
-                            /*
-                             * Wait a minimum of 2 seconds before displaying the
-                             * level
-                             */
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
                     }
                 }
 
-            } else { // when menu is loaded
+            } else if (menu != null) { // when menu is loaded
                 if (level != null)
                     level.backgroundSound.stopSound();
                 level = null;
@@ -141,7 +157,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
                 try {
                     Thread.sleep(CosmosConstants.PERIOD);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    break;
                 }
             }
         }
@@ -152,7 +168,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
      * movement permission granted to entities.
      */
     private void update() {
-        if (!isPaused && !noclip)
+        if (!isPaused && !noClip)
             collision();
         if (!isPaused)
             sideScroll();
@@ -213,10 +229,6 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
      * Side-scrolling
      */
     private void sideScroll() {
-        CosmosConstants.X_OFFSET = CosmosConstants.WIDTH / 2;
-        CosmosConstants.Y_OFFSET = CosmosConstants.HEIGHT / 2;
-        CosmosConstants.SCREEN_X_BOUND = CosmosConstants.WIDTH - CosmosConstants.X_OFFSET;
-        CosmosConstants.SCREEN_Y_BOUND = CosmosConstants.HEIGHT - CosmosConstants.Y_OFFSET;
         // left and right side-scrolling
         if (player.isMoving()) {
             if (player.isMovingRight() & !player.isCollidingRight()) {
@@ -229,8 +241,8 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
                     obj.setX((int) (obj.getX() - player.dX));
 
                 level.backgroundX -= player.dX;
-
             }
+
             if (player.isMovingLeft() & !player.isCollidingLeft()) {
                 // move room left
                 for (CosmosEntity obj : level.getLevelTextureObjects())
@@ -241,7 +253,6 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
                     obj.setX((int) (obj.getX() + player.dX));
 
                 level.backgroundX += player.dX;
-
             }
 
             // up and down side-scrolling
@@ -255,7 +266,6 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
                     obj.setY((int) (obj.getY() - player.dY));
 
                 level.backgroundY -= player.dY;
-
             }
             if (player.isMovingUp() & !player.isCollidingUp()) {
                 // move entire room up
@@ -267,59 +277,67 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
                     obj.setY((int) (obj.getY() + player.dY));
 
                 level.backgroundY += player.dY;
-
             }
         }
-
     }
 
     /**
      * Render components
      */
-    private void render() {
-        graphics = buffer.getDrawGraphics();
-        // refresh image
-        graphics.setColor(Color.black);
-        graphics.fillRect(0, 0, CosmosConstants.WIDTH, CosmosConstants.HEIGHT);
-        if (menu == null) {
-            graphics.setFont(new Font("HELVETICA", Font.PLAIN, 12));
-            level.draw(graphics);
-            if (hud == null)
-                hud = new CosmosHUD(this);
-            hud.draw(graphics);
-            if (CosmosConstants.DEBUG)
-                debug(graphics);
-            player.draw(graphics);
-            if (level.isLoading) // hold on load
-                level.onLoad(graphics);
-        } else {
-            menu.draw(graphics);
+    private synchronized void render() {
+        try {
+            graphics = buffer.getDrawGraphics();
+            // refresh image
+            graphics.setColor(Color.black);
+            graphics.fillRect(0, 0, CosmosConstants.WIDTH, CosmosConstants.HEIGHT);
+            if (menu == null) {
+                graphics.setFont(CosmosConstants.DEFAULT_FONT);
+                level.draw(graphics);
+                if (hud == null)
+                    hud = new CosmosHUD(this);
+                hud.draw(graphics);
+                player.draw(graphics);
+                if (CosmosConstants.DEBUG)
+                    debug(graphics);
+                if (level.isLoading) // hold on load
+                    level.onLoad(graphics);
+            } else {
+                menu.draw(graphics);
+            }
+        } catch (IllegalStateException e) {
+            System.err.println("If you have a secondary monitor the issue should fix itself");
+            e.printStackTrace();
         }
     }
 
     private void debug(Graphics g) {
         g.setColor(Color.WHITE);
-        g.drawString("Moving Right: " + player.isMovingRight(), 25, 100);
-        g.drawString("Moving Left: " + player.isMovingLeft(), 25, 115);
-        g.drawString("Moving Up: " + player.isMovingUp(), 25, 130);
-        g.drawString("Moving Down: " + player.isMovingDown(), 25, 145);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Moving Right: " + player.isMovingRight(), 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Moving Left: " + player.isMovingLeft(), 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Moving Up: " + player.isMovingUp(), 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Moving Down: " + player.isMovingDown(), 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
 
-        g.drawString("Colliding Right: " + player.isCollidingRight(), 150, 100);
-        g.drawString("Colliding Left: " + player.isCollidingLeft(), 150, 115);
-        g.drawString("Colliding Up: " + player.isCollidingUp(), 150, 130);
-        g.drawString("Colliding Down: " + player.isCollidingDown(), 150, 145);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Colliding Right: " + player.isCollidingRight(), 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Colliding Left: " + player.isCollidingLeft(), 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Colliding Up: " + player.isCollidingUp(), 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
+        CosmosConstants.LAST_STRING_BOUNDS = CosmosConstants.drawStringFromTop((Graphics2D) g, "Colliding Down: " + player.isCollidingDown(), 32, CosmosConstants.LAST_STRING_BOUNDS.y + CosmosConstants.LAST_STRING_BOUNDS.height + 5);
     }
 
     /**
      * Draw components
      */
-    private void draw() {
-        if (!buffer.contentsLost()) {
-            buffer.show();
+    private synchronized void draw() {
+        try {
+            if (!buffer.contentsLost()) {
+                buffer.show();
 
-            if (graphics != null) {
-                graphics.dispose();
+                if (graphics != null) {
+                    graphics.dispose();
+                }
             }
+        } catch (IllegalStateException e) {
+            System.err.println("If you have a secondary monitor the issue should fix itself");
+            e.printStackTrace();
         }
         Toolkit.getDefaultToolkit().sync();
     }
@@ -334,7 +352,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
         slots = new HashMap<>();
         for (int i = 0; i < player.getInventory().getItemSlots().size(); i++) {
             ItemSlot slot = player.getInventory().getItemSlots().get(i);
-            slots.put(i, new ItemSlot(slot.getX(), slot.getY(), slot.getMax()));
+            slots.put(i, new ItemSlot(slot.getMax()));
             if (slot.getItem() != null)
                 slots.get(i).add(slot.getItem(), slot.getQuantity());
         }
@@ -357,11 +375,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
     }
 
     public void restartLevel() {
-        try {
-            this.level = (LevelLoader) level.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
+        this.level = (LevelLoader) level.clone();
         player.getInventory().resetInv(slots);
         player.setCanMove(true);
         if (menu != null) {
@@ -447,5 +461,46 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
 
     public boolean isPaused() {
         return isPaused;
+    }
+
+    public synchronized void resizeCanvas(int width, int height) {
+        int deltaWidth = width - CosmosConstants.WIDTH;
+        int deltaHeight = height - CosmosConstants.HEIGHT;
+
+        if (CosmosConstants.DEBUG) {
+            System.out.println("Resizing old width = " + CosmosConstants.WIDTH + " | old height = " + CosmosConstants.HEIGHT);
+            System.out.println("Resizing new width = " + width + " | new height = " + height);
+            System.out.println("Resizing delta width = " + deltaWidth + " | delta height = " + deltaHeight);
+        }
+
+        CosmosConstants.HEIGHT = height;
+        CosmosConstants.WIDTH = width;
+
+        CosmosConstants.X_OFFSET = (int) ((width / 2) - (20 * CosmosConstants.SCALE));
+        CosmosConstants.Y_OFFSET = (int) ((height / 2) - (20 * CosmosConstants.SCALE));
+        CosmosConstants.SCREEN_X_BOUND = CosmosConstants.WIDTH - CosmosConstants.X_OFFSET;
+        CosmosConstants.SCREEN_Y_BOUND = CosmosConstants.HEIGHT - CosmosConstants.Y_OFFSET;
+
+        setBounds(0, 0, CosmosConstants.WIDTH, CosmosConstants.HEIGHT);
+
+        if (CosmosConstants.DEBUG) {
+            System.out.println("JFrame size: " + getParent().getBounds());
+            System.out.println("Canvas size: " + getBounds());
+            System.out.println("Constant size: W: " + CosmosConstants.WIDTH + " H: " + CosmosConstants.HEIGHT);
+        }
+
+        if (player != null) {
+            player.getBounds().x = CosmosConstants.X_OFFSET;
+            player.getBounds().y = CosmosConstants.Y_OFFSET;
+        }
+        if (level != null) {
+            level.resize(deltaWidth, deltaHeight);
+        }
+        if (menu != null) {
+            menu.resize(deltaWidth, deltaHeight);
+        }
+        if (hud != null) {
+            hud.resize(deltaWidth, deltaHeight);
+        }
     }
 }

@@ -10,10 +10,15 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
+
+import static com.cosmosengine.CosmosConstants.HEIGHT;
+import static com.cosmosengine.CosmosConstants.SCALE;
+import static com.cosmosengine.CosmosConstants.WIDTH;
 
 /**
  * Used by player to store picked up items and a combining interface.
@@ -28,25 +33,25 @@ public class Inventory implements Clickable {
     private ItemSlot cS1, cS2, pS;
     private GameCanvas game;
 
-    public Inventory(GameCanvas game) {
-        int gridX = CosmosConstants.WIDTH / 6 + 10;
-        int gridY = 125;
-        int rowCount = 0;
-        this.game = game;
-        cS1 = new ItemSlot(gridX + 100, 50, 99);
-        cS2 = new ItemSlot(gridX + 170, 50, 99);
-        pS = new ItemSlot(gridX + 250, 50, 99);
-        for (int i = 0; i <= 59; i++) {
-            itemSlots.put(i, new ItemSlot(gridX, gridY, ItemSlot.DEFAULT_MAX));
-            gridX += 45;
-            rowCount++;
+    private static final int COL_COUNT = 12;
+    private static final int SLOT_COUNT = 60;
+    private static final int ROW_COUNT = (int) (SLOT_COUNT / COL_COUNT);
 
-            // only 5 level boxes per row
-            if (rowCount == 12) {
-                gridY += 45;
-                gridX = CosmosConstants.WIDTH / 6 + 10;
-                rowCount = 0;
-            }
+    private static final int SLOT_MARGIN = (int) (5 * SCALE);
+    private static final int SLOT_SIZE = (int) (40 * SCALE);
+    private static final int HALF_SLOT = SLOT_SIZE / 2;
+
+    private static final int INVENTORY_MARGIN = (int) (20 * SCALE);
+    private static final int INVENTORY_WIDTH = (SLOT_SIZE * COL_COUNT) + (SLOT_MARGIN * (COL_COUNT + 1)) + (INVENTORY_MARGIN * 2);
+    private static final int INVENTORY_HEIGHT = (SLOT_SIZE * (ROW_COUNT + 1)) + (SLOT_MARGIN * (ROW_COUNT + 1)) + (INVENTORY_MARGIN * 3);
+
+    public Inventory(GameCanvas game) {
+        this.game = game;
+        cS1 = new ItemSlot(99);
+        cS2 = new ItemSlot(99);
+        pS = new ItemSlot(99);
+        for (int i = 0; i < SLOT_COUNT; i++) {
+            itemSlots.put(i, new ItemSlot(ItemSlot.DEFAULT_MAX));
         }
     }
 
@@ -60,22 +65,53 @@ public class Inventory implements Clickable {
 
     // draws the inventory
     public void displayInventory(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+
         g.setColor(Color.GRAY);
-        g.fillRect(CosmosConstants.WIDTH / 6, 25, 559, 350);
-        cS1.draw(g);
-        cS2.draw(g);
-        pS.draw(g);
+
+        int topX = (WIDTH / 2) - (INVENTORY_WIDTH / 2);
+        int topY = (HEIGHT / 2) - (INVENTORY_HEIGHT / 2);
+        int marginY = topY + INVENTORY_MARGIN;
+        int marginX = topX + INVENTORY_MARGIN;
+        int textMargin = 10;
+
+        Rectangle plusBounds = CosmosConstants.getStringBounds(g2, "+", topX, topY);
+        Rectangle equalsBounds = CosmosConstants.getStringBounds(g2, "=", topX, topY);
+        int spaceForThreeSlots = SLOT_SIZE * 3 + plusBounds.width + equalsBounds.width + (textMargin * 4);
+
+        g.fillRect(topX, topY, INVENTORY_WIDTH, INVENTORY_HEIGHT);
+
+        int cS1X = topX + ((INVENTORY_WIDTH / 2) - (spaceForThreeSlots / 2));
+        int cS2X = cS1X + SLOT_SIZE + (textMargin * 2) + plusBounds.width;
+        int pSX = cS2X + SLOT_SIZE + (textMargin * 2) + equalsBounds.width;
+
         g.setColor(Color.BLACK);
         Font temp = g.getFont();
-        g.setFont(new Font(temp.getFontName(), Font.BOLD, 20));
-        g.drawString("+", cS1.x + 47, 75);
-        g.drawString("=", cS2.x + 53, 75);
+        g.setFont(new Font(temp.getFontName(), Font.BOLD, (int) (20 * SCALE)));
+
+        CosmosConstants.drawStringFromTop(g2, "+", cS1X + SLOT_SIZE + textMargin, marginY + HALF_SLOT - (plusBounds.height / 2));
+        CosmosConstants.drawStringFromTop(g2, "=", cS2X + SLOT_SIZE + textMargin, marginY + HALF_SLOT - (equalsBounds.height / 2));
         g.setFont(temp);
+
+        cS1.draw(g, cS1X, marginY, SLOT_SIZE);
+        cS2.draw(g, cS2X, marginY, SLOT_SIZE);
+        pS.draw(g, pSX, marginY, SLOT_SIZE);
+
+        int xPos = marginX;
+        int yPos = marginY + SLOT_SIZE + INVENTORY_MARGIN;
+        int colCount = 0;
         for (int i = 0; i < itemSlots.size(); i++) {
-            itemSlots.get(i).draw(g);
+            itemSlots.get(i).draw(g, xPos, yPos, SLOT_SIZE);
+            colCount++;
+
+            xPos += SLOT_MARGIN + SLOT_SIZE;
+            if (colCount == COL_COUNT) {
+                colCount = 0;
+                xPos = marginX;
+                yPos += SLOT_MARGIN + SLOT_SIZE;
+            }
         }
         if (itemNamePoint != null) {
-            Graphics2D g2 = (Graphics2D) g;
             FontRenderContext frc = g2.getFontRenderContext();
             if (onItemName != null) {
                 Rectangle2D bounds = g2.getFont().getStringBounds(onItemName, frc);
@@ -92,10 +128,9 @@ public class Inventory implements Clickable {
         String tut = getText();
         if (tut != null) {
             String[] tuts = tut.split("-n");
-            int y = 105;
+            Rectangle last = new Rectangle(topX + INVENTORY_MARGIN, topY + INVENTORY_MARGIN, 0, 0);
             for (String s : tuts) {
-                g.drawString(s, CosmosConstants.WIDTH / 6 + 10, y);
-                y += 15;
+                last = CosmosConstants.drawStringFromTop(g2, s, last.x, last.y + last.height + SLOT_MARGIN);
             }
         }
     }
@@ -126,21 +161,9 @@ public class Inventory implements Clickable {
      */
     public void resetInv(HashMap<Integer, ItemSlot> slots) {
         if (slots == null) {
-            int gridX = CosmosConstants.WIDTH / 6 + 10;
-            int gridY = 125;
-            int rowCount = 0;
             itemSlots = new HashMap<>();
-            for (int i = 0; i <= 59; i++) {
-                itemSlots.put(i, new ItemSlot(gridX, gridY, ItemSlot.DEFAULT_MAX));
-                gridX += 45;
-                rowCount++;
-
-                // only 5 level boxes per row
-                if (rowCount == 12) {
-                    gridY += 45;
-                    gridX = CosmosConstants.WIDTH / 6 + 10;
-                    rowCount = 0;
-                }
+            for (int i = 0; i < SLOT_COUNT; i++) {
+                itemSlots.put(i, new ItemSlot(ItemSlot.DEFAULT_MAX));
             }
         } else
             itemSlots = slots;

@@ -136,29 +136,29 @@ public class LevelOne extends LevelLoader {
 				+ "[tz;240;40;finalScript;0]\n" + "[terminal;LevelTwo]\n";
         // @formatter:on
 
-        startScript = new MessagePopupEntity(game, 50, "Welcome BK201 to A-52-n" + "Funding has been approved for -n" + "the exploration of this sector.-n" + "Our scientists believe that a-n" + "valuable material can be found-n" + "near the center of this asteroid.-n" + "Please proceed for further-ninstruction.-n-n" + "End Transmission.", "computer/startScript.wav");
+        startScript = new MessagePopupEntity(game, 1, "Welcome BK201 to A-52-n" + "Funding has been approved for -n" + "the exploration of this sector.-n" + "Our scientists believe that a-n" + "valuable material can be found-n" + "near the center of this asteroid.-n" + "Please proceed for further-ninstruction.-n-n" + "End Transmission.", "computer/startScript.wav");
 
-        digScript = new MessagePopupEntity(game, 50, "This is an expected obstacle.-n" + "Clear the path with your saw blade.", "computer/digScript.wav");
+        digScript = new MessagePopupEntity(game, 1, "This is an expected obstacle.-n" + "Clear the path with your saw blade.", "computer/digScript.wav");
 
-        afterDigScript = new MessagePopupEntity(game, 50, "You now understand the basics of-n" + "drilling. Now keep going.", "computer/afterDigScript.wav");
+        afterDigScript = new MessagePopupEntity(game, 1, "You now understand the basics of-n" + "drilling. Now keep going.", "computer/afterDigScript.wav");
 
-        hydrogenScript = new MessagePopupEntity(game, 50, "Scanners detect the presence-n" + "of Hydrogen trapped in gas-n" + "pockets within the nearby-n" + "dirt. Hydrogen serves as an-n" + "excellent reagent, collection-n" + "is advised. ", "computer/hydrogenScript.wav");
+        hydrogenScript = new MessagePopupEntity(game, 1, "Scanners detect the presence-n" + "of Hydrogen trapped in gas-n" + "pockets within the nearby-n" + "dirt. Hydrogen serves as an-n" + "excellent reagent, collection-n" + "is advised. ", "computer/hydrogenScript.wav");
 
-        waterScript = new MessagePopupEntity(game, 50, "The material ahead can�t be-n" + "pierced without first weakening-n" + "it. Sources confirm that-n" + "such debris may be damaged by-n" + "applying water. Since such a-n" + "compound is not natural in A-52-n" + "combine two hydrogen pieces and-n" + "an oxygen piece to create the-n" + "water needed.-n", "computer/waterScript.wav");
+        waterScript = new MessagePopupEntity(game, 1, "The material ahead can�t be-n" + "pierced without first weakening-n" + "it. Sources confirm that-n" + "such debris may be damaged by-n" + "applying water. Since such a-n" + "compound is not natural in A-52-n" + "combine two hydrogen pieces and-n" + "an oxygen piece to create the-n" + "water needed.-n", "computer/waterScript.wav");
 
-        gasScript = new MessagePopupEntity(game, 50, "Crystals contain a variety of-n" + "elements that may be processed.-n" + "The material received from-n" + "mining the crystal is heavily-n" + "dependent on the blade of-n" + "your saw.", "computer/gasScript.wav");
+        gasScript = new MessagePopupEntity(game, 1, "Crystals contain a variety of-n" + "elements that may be processed.-n" + "The material received from-n" + "mining the crystal is heavily-n" + "dependent on the blade of-n" + "your saw.", "computer/gasScript.wav");
 
-        powerUpScript = new MessagePopupEntity(game, 50, "This material may be used to-n" + "improve the strength of your-n" + " saw.", "computer/powerUpScript.wav");
+        powerUpScript = new MessagePopupEntity(game, 1, "This material may be used to-n" + "improve the strength of your-n" + " saw.", "computer/powerUpScript.wav");
 
-        defenseIntroScript = new MessagePopupEntity(game, 50, "It appears that parts of the mine's-n" + "old defense system remain intact.-n" + "Caution is advised.", "computer/defenseIntroScript.wav");
+        defenseIntroScript = new MessagePopupEntity(game, 1, "It appears that parts of the mine's-n" + "old defense system remain intact.-n" + "Caution is advised.", "computer/defenseIntroScript.wav");
 
-        hclScript = new MessagePopupEntity(game, 50, "To proceed, use Hydrochloric Acid.-n" + "Hydrogen and Chlorine must be-n" + "combined to weaken the debris.", "computer/hclScript.wav");
+        hclScript = new MessagePopupEntity(game, 1, "To proceed, use Hydrochloric Acid.-n" + "Hydrogen and Chlorine must be-n" + "combined to weaken the debris.", "computer/hclScript.wav");
 
-        co2Script = new MessagePopupEntity(game, 50, "A high concentration of Carbon-n" + "Dioxide is required to weaken-n" + "the rock ahead. Carbon can be-n" + "mined from fossils in the-n" + "nearby area.", "computer/co2Script.wav");
+        co2Script = new MessagePopupEntity(game, 1, "A high concentration of Carbon-n" + "Dioxide is required to weaken-n" + "the rock ahead. Carbon can be-n" + "mined from fossils in the-n" + "nearby area.", "computer/co2Script.wav");
 
-        carboScript = new MessagePopupEntity(game, 50, "In order to prepare Carbonic Acid,-n" + "Carbonate and Hydrogen must be-n" + "mixed. The former is composed-n" + "of one Carbon element and three-n" + "Oxygen elements. And then two-n" + "hydrogen elements must be added-n" + "to the carbonate.", "computer/carboScript.wav");
+        carboScript = new MessagePopupEntity(game, 1, "In order to prepare Carbonic Acid,-n" + "Carbonate and Hydrogen must be-n" + "mixed. The former is composed-n" + "of one Carbon element and three-n" + "Oxygen elements. And then two-n" + "hydrogen elements must be added-n" + "to the carbonate.", "computer/carboScript.wav");
 
-        finalScript = new MessagePopupEntity(game, 50, "The tunnel ahead will take you-n" + "deeper into the asteroid. Proceed-n" + "with caution.", "computer/finalScript.wav");
+        finalScript = new MessagePopupEntity(game, 1, "The tunnel ahead will take you-n" + "deeper into the asteroid. Proceed-n" + "with caution.", "computer/finalScript.wav");
 
         this.levelConstantObjects.add(startScript);
         this.levelConstantObjects.add(digScript);
@@ -178,7 +178,7 @@ public class LevelOne extends LevelLoader {
         game.player.setCanMove(true);
         game.setObjective("Explore the Asteroid.");
 
-        loadImage = ImageLoader.get().getSprite("loading_screen.png");
+        loadImage = ImageLoader.get().getSprite("loading_screen.png", true);
 
         //Loading screen text
         script1 = new MessageEntity(game, null, null, null, 50, 50, -1, -1, 47, "Initializing...               -n" + "Initialization complete.    -n" + "-n" + "Beginning optimization of NEL Operating System...      -n" + "Searching files for relevant data...     -n" + "Background information accessed.-n" + "-n" + "I am NEL. Necessary Element Locator.-n" + "-n" + "I was developed in response to the commission of the BK201 mining droid to the Asteroid A-52, which was-n" + "previously colonized by a mining corporation known as [name redacted from files]. The corporation looked-n" + "for a valuable material known as Radonite in the center of the asteroid. In the year [information redacted],-n" + "instabilites within the asteroid caused the corporation to abandon its mission of acquiring the material-n" + "due to danger of loss of life and/or severe injury. The droid has been optimized to resist the Gamma-n" + "radiation emmitted by the Radonite. I am here to direct BK201 to obtain and synthesize materials needed to-n" + "reach the Radonite.         ");
@@ -253,7 +253,6 @@ public class LevelOne extends LevelLoader {
         script1.act();
         script1.draw(g);
         isOnLoadFinished = script1.isDone();
-
     }
 
     @Override

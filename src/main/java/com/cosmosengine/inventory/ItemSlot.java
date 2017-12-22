@@ -4,6 +4,7 @@ import com.cosmosengine.CosmosConstants;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 /**
@@ -12,41 +13,36 @@ import java.awt.Rectangle;
 public class ItemSlot {
     public static final int DEFAULT_MAX = 24;
 
-    private int max; // maximum number of this item per
-    // slot
+    private int max; // maximum number of this item per slot
     private int quantity = 0; // current quantity in slot
-    private Rectangle me = new Rectangle();
-
-    int x;
-    private int y;
-
+    private Rectangle bounds = new Rectangle(40, 40);
     private Item item;
 
-    public ItemSlot(int x, int y, int max) {
-        this.x = x;
-        this.y = y;
-        me.x = x;
-        me.y = y;
-        me.width = 40;
-        me.height = 40;
+    public ItemSlot(int max) {
         this.max = max;
 
     }
 
     /**
-     * Draw the specific item in the Inventory, must be 40 by 40 pixels.
+     * Draw the specific item in the Inventory
      *
      * @param g
      */
-    public void draw(Graphics g) {
+    public void draw(Graphics g, int x, int y, int slotSize) {
+        bounds.x = x;
+        bounds.y = y;
+        bounds.width = slotSize;
+        bounds.height = slotSize;
+
         g.setColor(Color.BLACK);
-        g.drawRect(x, y, 40, 40);
+        g.drawRect(x, y, slotSize, slotSize);
         if (item != null) {
-            item.draw(g, x, y);
+            item.draw(g, x + 5, y + 5);
             // display current quantity
             g.setColor(Color.RED);
-            if (quantity != 1)
-                g.drawString(Integer.toString(quantity), x, y + 10);
+            if (quantity != 1) {
+                CosmosConstants.drawStringFromTop((Graphics2D) g, Integer.toString(quantity), x + 1, y + 1);
+            }
         }
     }
 
@@ -83,10 +79,6 @@ public class ItemSlot {
 
     public Item getItem() {
         return item;
-    }
-
-    public Rectangle getBounds() {
-        return me;
     }
 
     public int getQuantity() {
@@ -129,12 +121,8 @@ public class ItemSlot {
 
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
+    public Rectangle getBounds() {
+        return bounds;
     }
 
     public int getMax() {

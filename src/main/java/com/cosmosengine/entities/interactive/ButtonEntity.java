@@ -1,5 +1,6 @@
 package com.cosmosengine.entities.interactive;
 
+import com.cosmosengine.CosmosConstants;
 import com.cosmosengine.CosmosEntity;
 import com.cosmosengine.GameCanvas;
 import com.cosmosengine.SpriteManager.CosmosSprite;
@@ -7,6 +8,7 @@ import com.cosmosengine.SpriteManager.ImageLoader;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 
@@ -34,11 +36,9 @@ public class ButtonEntity extends CosmosEntity {
      * @param onDeath
      * @param xPos
      * @param yPos
-     * @param width
-     * @param height
      */
-    public ButtonEntity(GameCanvas game, String buttonRef, String folder, String ref, String onDeath, int xPos, int yPos, int width, int height) {
-        super(game, folder, ref, onDeath, xPos, yPos, width, height, -1);
+    public ButtonEntity(GameCanvas game, String buttonRef, String folder, String ref, String onDeath, int xPos, int yPos) {
+        super(game, folder, ref, onDeath, xPos, yPos, -1);
         this.buttonRef = buttonRef;
     }
 
@@ -86,22 +86,26 @@ public class ButtonEntity extends CosmosEntity {
     @Override
     public void draw(Graphics g) {
         Color c = g.getColor();
-        if (this.sprites != null)
+        if (this.sprites != null) {
             this.sprites[getCurrent()].draw(g, me.x, me.y);
-        else {
+            if (CosmosConstants.DEBUG) {
+                Graphics2D g2 = (Graphics2D) g;
+                g.setColor(Color.BLUE);
+                g2.draw(me);
+            }
+        } else {
             if (getCurrent() == 0) {
                 g.setColor(Color.LIGHT_GRAY);
                 g.fill3DRect(me.x, me.y, me.width, me.height, true);
                 g.setColor(Color.BLACK);
                 g.drawString(msg, me.x + 10, (me.y + me.height / 2) + 3);
-                g.setColor(c);
             } else {
                 g.setColor(Color.LIGHT_GRAY);
                 g.fill3DRect(me.x, me.y, me.width, me.height, false);
                 g.setColor(Color.BLACK);
                 g.drawString(msg, me.x + 10, (me.y + me.height / 2) + 5);
-                g.setColor(c);
             }
+            g.setColor(c);
         }
 
     }

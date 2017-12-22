@@ -246,7 +246,7 @@ public class LevelTwoB extends LevelLoader {
 
         // load background image
         //background = ImageLoader.get().getSprite("background.jpg");
-        loadImage = ImageLoader.get().getSprite("loading_screen.png");
+        loadImage = ImageLoader.get().getSprite("loading_screen.png", true);
         game.player.setCanMove(true);
         game.setObjective("Track down the particle.");
         // load level

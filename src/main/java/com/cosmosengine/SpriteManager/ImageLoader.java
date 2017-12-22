@@ -1,15 +1,19 @@
 package com.cosmosengine.SpriteManager;
 
+import com.cosmosengine.CosmosConstants;
 import com.cosmosengine.GameFrame;
 
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
+
+import static com.cosmosengine.CosmosConstants.SCALE;
 
 /**
  * The loader class for retrieving cached sprites. Will add the sprite to the cache if it is not already there.
@@ -25,8 +29,13 @@ public class ImageLoader {
     private HashMap<String, CosmosSprite> images = new HashMap<>();
 
     public CosmosSprite getSprite(String ref) {
-        if (images.get(ref) != null)
-            return images.get(ref);
+        return getSprite(ref, false);
+    }
+
+    public CosmosSprite getSprite(String ref, boolean fillScreen) {
+        String identifier = ref + (fillScreen ? "F" : "");
+        if (images.get(identifier) != null)
+            return images.get(identifier);
         CosmosSprite sprite = null;
         BufferedImage sourceImage = null;
         URL url = GameFrame.class.getClassLoader().getResource("assets/" + ref);
@@ -40,13 +49,14 @@ public class ImageLoader {
         }
 
         if (sourceImage != null) {
-            sprite = new CosmosSprite(toCompatibleImage(sourceImage));
-            images.put(ref, sprite);
+            sprite = new CosmosSprite(toCompatibleImage(sourceImage, fillScreen));
+            images.put(identifier, sprite);
         }
         return sprite;
     }
 
-    private BufferedImage toCompatibleImage(BufferedImage image) {
+    @SuppressWarnings("ConstantConditions")
+    private BufferedImage toCompatibleImage(BufferedImage image, boolean fillScreen) {
         // obtain the current system graphical settings
         GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 
@@ -66,6 +76,17 @@ public class ImageLoader {
         // actually draw the image and dispose of context no longer needed
         g2d.drawImage(image, 0, 0, null);
         g2d.dispose();
+
+        if (fillScreen || SCALE != 1) {
+            int newWidth = fillScreen ? CosmosConstants.WIDTH : (int) (image.getWidth() * SCALE);
+            int newHeight = fillScreen ? CosmosConstants.HEIGHT : (int) (image.getHeight() * SCALE);
+            BufferedImage resized = new BufferedImage(newWidth, newHeight, newImage.getType());
+            Graphics2D g = resized.createGraphics();
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.drawImage(newImage, 0, 0, newWidth, newHeight, 0, 0, newImage.getWidth(), newImage.getHeight(), null);
+            g.dispose();
+            return resized;
+        }
 
         // return the new optimized image
         return newImage;

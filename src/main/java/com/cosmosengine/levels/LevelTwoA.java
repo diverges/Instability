@@ -94,7 +94,7 @@ public class LevelTwoA extends LevelLoader {
 
         // load background image
         //background = ImageLoader.get().getSprite("background.jpg");
-        loadImage = ImageLoader.get().getSprite("loading_screen.png");
+        loadImage = ImageLoader.get().getSprite("loading_screen.png", true);
         game.player.setCanMove(true);
         game.setObjective("Explore the Asteroid.");
         // load level

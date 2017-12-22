@@ -5,6 +5,7 @@ import com.cosmosengine.SpriteManager.ImageLoader;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 
@@ -72,12 +73,12 @@ public abstract class CosmosEntity {
         stepsNeeded = (int) (millis / CosmosConstants.PERIOD);
         me.x = x;
         me.y = y;
-        me.width = width;
-        me.height = height;
+        me.width = (int) (width * CosmosConstants.SCALE);
+        me.height = (int) (height * CosmosConstants.SCALE);
     }
 
     /**
-     * Use this constructor to make the width and the height to be the image's width and heigh.
+     * Use this constructor to make the width and the height to be the image's width and height.
      *
      * @param game    used to access main class.
      * @param folder  which contains the images
@@ -187,12 +188,19 @@ public abstract class CosmosEntity {
     }
 
     public void draw(Graphics g) {
-        sprites[current].draw(g, me.x, me.y);
         if (CosmosConstants.DEBUG) {
             g.setColor(Color.WHITE);
-            g.drawRect(me.x, me.y, me.width, me.height);
-            g.setColor(Color.BLUE);
+            g.fillRect(me.x, me.y, me.width, me.height);
+
+            g.setColor(Color.BLACK);
+            g.setFont(CosmosConstants.SMALL_FONT);
+            CosmosConstants.drawStringFromTop((Graphics2D) g, "(" + me.x + "," + me.y + ")", me.x + 2, me.y + 2);
+
+            g.setFont(CosmosConstants.DEFAULT_FONT);
+
             g.fillOval(me.x + me.width / 2, me.y + me.height / 2, 3, 3);
+        } else {
+            sprites[current].draw(g, me.x, me.y);
         }
     }
 

@@ -32,7 +32,7 @@ public class MessagePopupEntity extends CosmosEntity {
             message[i] = "";
         }
 
-        isAlive = false; // objects starts of "dead" until event
+        isAlive = false; // objects starts off "dead" until event
         if (soundRef != null)
             sound = SoundLoader.get().getSound(soundRef);
 
