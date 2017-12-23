@@ -200,7 +200,11 @@ public abstract class CosmosEntity {
 
             g.fillOval(me.x + me.width / 2, me.y + me.height / 2, 3, 3);
         } else {
-            sprites[current].draw(g, me.x, me.y);
+            try {
+                sprites[current].draw(g, me.x, me.y);
+            } catch (NullPointerException e) {
+                g.fillRect(me.x, me.y, me.width, me.height);
+            }
         }
     }
 

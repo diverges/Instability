@@ -149,7 +149,7 @@ public class GameCanvas extends Canvas implements Runnable, MouseListener, Mouse
                 }
 
             } else if (menu != null) { // when menu is loaded
-                if (level != null)
+                if (level != null && level.backgroundSound != null)
                     level.backgroundSound.stopSound();
                 level = null;
                 render();
